@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
+
+  mock-api:
+    build: ./mock-api
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  haproxy:
+    build: ./haproxy
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
