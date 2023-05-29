@@ -6,6 +6,11 @@ O objetivo do trabalho é construir um sistema computacional que incorpore os co
 
 O trabalho foi desenvolvido pelos alunos:
 
+Dalmo Scalon Inácio - 12111BSI274
+Guilherme Castilho - 12021BSI225
+José Luzia da Silva Neto - 12021BSI264
+Lucas Gabriel Dutra de Souza - 12121BSI226
+Victor Hugo Morais da Silva - 11921BSI231
 
 
 Mais informações podem ser encontradas no arquivo: [AtividadeAvaliativaFinal_202202](AtividadeAvaliativaFinal_202202.pdf)

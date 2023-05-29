@@ -1,6 +1,20 @@
-version: '3'
+version: '3.8'
 
 services:
+  db:
+    build: ./postgresql
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    # volumes:
+    #   - ./volumes/postgres:/var/lib/postgresql/data #não funciona no windows
+    networks:
+      - app_network
+
   backend:
     build: ./backend
     ports:
@@ -8,37 +22,38 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_URL: "jdbc:postgresql://db:5432/${DB_NAME}"
+      DATABASE_USER: "${DB_USER}"
+      DATABASE_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - app_network
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "8000:8000"
-    depends_on:
-      - backend
+  # mock-api:
+  #   build: ./mock-api
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - app_network
 
-  mock-api:
-    build: ./mock-api
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - app_network
 
-  db:
-    image: postgres:13
-    restart: always
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - ./data:/var/lib/postgresql/data
+  # haproxy:
+  #   build: ./haproxy
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #     - frontend
+  #   networks:
+  #     - app_network
 
-  haproxy:
-    build: ./haproxy
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - frontend
+networks:
+  app_network:
+    name: app_network
