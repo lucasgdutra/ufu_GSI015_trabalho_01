@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "br.ufu.gsi015.App",
+            "projectName": "quiz"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "br.ufu.gsi015.App.main",
+            "args": "",
+            "projectName": "trabalho-poo"
+        }
+    ]
+}

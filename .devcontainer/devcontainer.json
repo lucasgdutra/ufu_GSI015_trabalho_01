@@ -1,0 +1,58 @@
+{
+	"name": "Java & PostgreSQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"runArgs": ["--env-file","../.env"],
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"sqltools.connections": [
+					{
+						"name": "Container database",
+						"driver": "PostgreSQL",
+						"previewLimit": 50,
+						"server": "localhost",
+						"port": 5432,
+						"database": "${POSTGRES_DB}",
+						"username": "${POSTGRES_USER}",
+						"password": "${POSTGRES_PASSWORD}"
+					}
+				]
+			},
+
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"MS-CEINTL.vscode-language-pack-pt-BR",
+				"streetsidesoftware.code-spell-checker-portuguese-brazilian",
+				"vscjava.vscode-java-pack",
+				"vmware.vscode-boot-dev-pack",
+				"GitHub.copilot",
+				"mtxr.sqltools",
+				"mtxr.sqltools-driver-pg"
+			]
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// This can be used to network with other containers or with the host.
+	"forwardPorts": [5432,3000,8080],
+
+	"portsAttributes": {
+		"8080": {"label": "Java port", "onAutoForward": "notify"},
+		"3000": {"label": "React port", "onAutoForward": "notify"},
+		"5432": {"label": "PostgreSQL port", "onAutoForward": "silent"}
+	},
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "java -version",
+
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
+
+}
