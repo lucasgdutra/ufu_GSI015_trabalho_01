@@ -2,16 +2,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "App",
+            "name": "backend",
             "request": "launch",
-            "mainClass": "br.ufu.gsi015.App",
-            "projectName": "quiz"
-        },
-        {
-            "type": "java",
-            "name": "Launch App",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/backend",
+            "cwd": "${workspaceFolder}/backend/quiz",
             "console": "internalConsole",
             "stopOnEntry": false,
             "mainClass": "br.ufu.gsi015.App.main",

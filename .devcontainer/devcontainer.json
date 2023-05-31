@@ -3,7 +3,6 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
-	"runArgs": ["--env-file","../.env"],
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -27,8 +26,8 @@
 
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"streetsidesoftware.code-spell-checker",
 				"MS-CEINTL.vscode-language-pack-pt-BR",
+				"streetsidesoftware.code-spell-checker",
 				"streetsidesoftware.code-spell-checker-portuguese-brazilian",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
@@ -41,11 +40,11 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or with the host.
-	"forwardPorts": [5432,3000,8080],
+	"forwardPorts": [5432,8000,8080],
 
 	"portsAttributes": {
 		"8080": {"label": "Java port", "onAutoForward": "notify"},
-		"3000": {"label": "React port", "onAutoForward": "notify"},
+		"8000": {"label": "Gatsby port", "onAutoForward": "notify"},
 		"5432": {"label": "PostgreSQL port", "onAutoForward": "silent"}
 	},
 
