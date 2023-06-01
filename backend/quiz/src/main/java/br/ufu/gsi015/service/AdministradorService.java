@@ -46,4 +46,14 @@ public class AdministradorService {
         }
         throw new CustomNotFoundException("User not found");
     }
+
+    public String deleteAdministrador(Long id){
+        Optional<Administrador> existingUser = getAdministradorById(id);
+        if (existingUser.isPresent()) {
+            Administrador user = existingUser.get();
+            repository.delete(user);
+            return "OK";
+        }
+        throw new CustomNotFoundException("User not found");
+    }
 }
