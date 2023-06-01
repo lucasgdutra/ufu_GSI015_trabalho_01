@@ -1,5 +1,6 @@
 package br.ufu.gsi015.service;
 
+import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.controller.exceptions.DatabaseException;
 import br.ufu.gsi015.controller.exceptions.ServiceException;
 import br.ufu.gsi015.model.Resposta;
@@ -42,8 +43,18 @@ public class RespostaService {
         return respostaRepository.save(resposta);
     }
 
-    public void deleteResposta(Long id) {
+    /*public void deleteResposta(Long id) {
         respostaRepository.deleteById(id);
+    }*/
+
+    public String deleteResposta(Long id){
+        Optional<Resposta> existingResposta = getRespostaById(id);
+        if (existingResposta.isPresent()) {
+            Resposta r = existingResposta.get();
+            respostaRepository.delete(r);
+            return "OK";
+        }
+        throw new CustomNotFoundException("User not found");
     }
 
     public Iterable<Resposta> getRespostasByQuestaoId(Long questaoId) {
