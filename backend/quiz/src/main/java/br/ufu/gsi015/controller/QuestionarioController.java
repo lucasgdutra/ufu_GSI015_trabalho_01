@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Questionario;
 import br.ufu.gsi015.service.QuestionarioService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/questionarios")
@@ -58,6 +60,11 @@ public class QuestionarioController {
                 questionario.getTitulo() == null ? questionarioAtualizado.getTitulo() : questionario.getTitulo());
 
         return new ResponseEntity<>(questionarioService.updateQuestionario(questionarioAtualizado), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteQuestionario(@Valid @PathVariable Long id){
+        return new ResponseEntity<String>(questionarioService.deleteQuestionario(id),HttpStatus.OK);
     }
 
 }
