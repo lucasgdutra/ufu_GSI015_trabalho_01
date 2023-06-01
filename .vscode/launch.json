@@ -10,6 +10,16 @@
             "mainClass": "br.ufu.gsi015.App.main",
             "args": "",
             "projectName": "trabalho-poo"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-App<quiz>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.ufu.gsi015.App",
+            "projectName": "quiz",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
