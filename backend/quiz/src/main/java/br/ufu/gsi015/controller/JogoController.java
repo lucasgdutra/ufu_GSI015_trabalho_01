@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,10 @@ public class JogoController {
     @PutMapping("/{id}")
     public ResponseEntity<Jogo> replaceJogo(@RequestBody Jogo jogo, @PathVariable("id") Long id) {
         return new ResponseEntity<>(jogoService.updateJogo(jogo, id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteJogo(@PathVariable Long id){
+        return new ResponseEntity<String>(jogoService.deleteJogo(id),HttpStatus.OK);
     }
 }
