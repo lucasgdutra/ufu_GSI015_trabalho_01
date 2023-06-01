@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Resposta;
 import br.ufu.gsi015.service.RespostaService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/respostas")
@@ -75,6 +77,11 @@ public class RespostaController {
             return new ResponseEntity<>(service.saveResposta(respostaAtual.get()), HttpStatus.OK);
         }
         throw new CustomNotFoundException("Resposta nao encontrada");
-
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteResposta(@Valid @PathVariable Long id){
+        return new ResponseEntity<String>(service.deleteResposta(id),HttpStatus.OK);
+    }
+
 }
