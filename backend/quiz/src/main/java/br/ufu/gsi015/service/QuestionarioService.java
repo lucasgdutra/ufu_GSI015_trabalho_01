@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.controller.exceptions.DatabaseException;
 import br.ufu.gsi015.controller.exceptions.ServiceException;
 import br.ufu.gsi015.model.Questionario;
@@ -37,8 +38,18 @@ public class QuestionarioService {
         return questionarioRepository.save(questionario);
     }
 
-    public void deleteQuestionario(Long id) {
+    /*public void deleteQuestionario(Long id) {
         questionarioRepository.deleteById(id);
+    }*/
+
+    public String deleteQuestionario(Long id){
+        Optional<Questionario> existingQuestionario = getQuestionarioById(id);
+        if (existingQuestionario.isPresent()) {
+            Questionario q = existingQuestionario.get();
+            questionarioRepository.delete(q);
+            return "OK";
+        }
+        throw new CustomNotFoundException("User not found");
     }
 
     public Optional<Questionario> getQuestionarioById(Long id) {
