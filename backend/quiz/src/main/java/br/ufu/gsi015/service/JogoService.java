@@ -39,10 +39,20 @@ public class JogoService {
         throw new CustomNotFoundException("Jogo nao encontrado");
     }
 
-    public void deleteJogo(Long id) {
+    /*public void deleteJogo(Long id) {
         jogoRepository.deleteById(id);
-    }
+    }*/
 
+    public String deleteJogo(Long id){
+        Optional<Jogo> existingUser = getJogoById(id);
+        if (existingUser.isPresent()) {
+            Jogo user = existingUser.get();
+            jogoRepository.delete(user);
+            return "OK";
+        }
+        throw new CustomNotFoundException("User not found");
+    }
+    
     public Optional<Jogo> getJogoById(Long id) {
         return jogoRepository.findById(id);
     }
@@ -56,3 +66,4 @@ public class JogoService {
     }
 
 }
+
