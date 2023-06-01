@@ -51,8 +51,18 @@ public class JogadorService {
                 .orElseThrow(() -> new CustomNotFoundException("User not found"));
     }
 
-    public void deleteJogador(Long id) {
+    /*public void deleteJogador(Long id) {
         jogadorRepository.deleteById(id);
+    }*/
+
+    public String deleteJogador(Long id){
+        Optional<Jogador> existingUser = getJogadorById(id);
+        if (existingUser.isPresent()) {
+            Jogador user = existingUser.get();
+            jogadorRepository.delete(user);
+            return "OK";
+        }
+        throw new CustomNotFoundException("User not found");
     }
 
 }
