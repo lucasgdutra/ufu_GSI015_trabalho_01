@@ -44,24 +44,19 @@ public class RespostaController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Boolean> boolResposta(@PathVariable("id") Long id){
-    try {
-        Optional<Resposta> resposta = service.getRespostaById(id);
-        if (resposta.isPresent()) {
-            boolean correta = resposta.get().getCorreta();
-            if (correta) {
-                return new ResponseEntity<>(true, HttpStatus.OK);
+    ResponseEntity<Boolean> boolResposta(@PathVariable("id") Long id) {
+        try {
+            Optional<Resposta> resposta = service.getRespostaById(id);
+            if (resposta.isPresent()) {
+                boolean correta = resposta.get().getCorreta();
+                return new ResponseEntity<>(correta, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(false, HttpStatus.OK);
+                throw new CustomNotFoundException("Resposta não encontrada");
             }
-        } else {
-            throw new CustomNotFoundException("Resposta não encontrada");
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-    } catch (Exception e) {
-        throw new CustomInternalErrorException(e.getMessage());
     }
-}
-
 
     @GetMapping("/questao/{questaoId}")
     ResponseEntity<Iterable<Resposta>> allRespostasByQuestaoId(@PathVariable("questaoId") Long questaoId) {
@@ -100,8 +95,8 @@ public class RespostaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteResposta(@Valid @PathVariable Long id){
-        return new ResponseEntity<String>(service.deleteResposta(id),HttpStatus.OK);
+    public ResponseEntity<String> deleteResposta(@Valid @PathVariable Long id) {
+        return new ResponseEntity<String>(service.deleteResposta(id), HttpStatus.OK);
     }
 
 }
