@@ -43,6 +43,21 @@ public class RespostaController {
         }
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<Boolean> boolResposta(@PathVariable("id") Long id){
+        try {
+            Optional<Resposta> resposta = service.getRespostaById(id);
+            if (resposta.isPresent()) {
+                boolean correta = resposta.get().getCorreta();
+                return new ResponseEntity<>(correta, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<Boolean>(false,HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
     @GetMapping("/questao/{questaoId}")
     ResponseEntity<Iterable<Resposta>> allRespostasByQuestaoId(@PathVariable("questaoId") Long questaoId) {
         try {
