@@ -39,4 +39,9 @@ public class AdministradorController {
             @RequestBody Administrador newEntity) {
         return new ResponseEntity<>(service.updateAdministrador(id, newEntity), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAdministrador(@Valid @PathVariable Long id){
+        return new ResponseEntity<String>(service.deleteAdministrador(id),HttpStatus.OK);
+    }
 }
