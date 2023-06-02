@@ -43,7 +43,7 @@ public class RespostaController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/correta")
     ResponseEntity<Boolean> boolResposta(@PathVariable("id") Long id) {
         try {
             Optional<Resposta> resposta = service.getRespostaById(id);
