@@ -1,16 +1,6 @@
 {
     "configurations": [
-        {
-            "type": "java",
-            "name": "backend",
-            "request": "launch",
-            "cwd": "${workspaceFolder}/backend/quiz",
-            "console": "internalConsole",
-            "stopOnEntry": false,
-            "mainClass": "br.ufu.gsi015.App.main",
-            "args": "",
-            "projectName": "trabalho-poo"
-        },
+
         {
             "type": "java",
             "name": "Spring Boot-App<quiz>",
