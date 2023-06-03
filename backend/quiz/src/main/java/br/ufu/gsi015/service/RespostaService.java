@@ -6,7 +6,7 @@ import br.ufu.gsi015.controller.exceptions.ServiceException;
 import br.ufu.gsi015.model.Resposta;
 
 import br.ufu.gsi015.repository.RespostaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 

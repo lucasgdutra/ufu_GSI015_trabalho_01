@@ -4,7 +4,7 @@ import br.ufu.gsi015.controller.exceptions.CustomConflictException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Jogador;
 import br.ufu.gsi015.repository.JogadorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -3,7 +3,7 @@ package br.ufu.gsi015.service;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Jogo;
 import br.ufu.gsi015.repository.JogoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
