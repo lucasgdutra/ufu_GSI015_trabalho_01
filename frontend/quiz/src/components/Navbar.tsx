@@ -1,8 +1,16 @@
 import { Link } from 'gatsby';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { QuizContext, QuizDispatchContext } from '../store/Context';
 
 const Navbar = () => {
+	const { username } = useContext(QuizContext);
+	const {  } = useContext(QuizDispatchContext);
 	const [isOpen, setIsOpen] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const handleLogout = () => {
+		localStorage.removeItem('username');
+		dispatch({ type: 'DEFINE_QUIZ', payload: null });
+	};
 
 	return (
 		<nav className="bg-white shadow-md">
@@ -53,7 +61,7 @@ const Navbar = () => {
 							</svg>
 						</button>
 					</div>
-					<div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+					<div className="flex-1 flex items-center justify-around sm:items-stretch sm:justify-start">
 						<div className="flex-shrink-0 flex items-center">
 							<span className="font-semibold text-xl tracking-tight text-indigo-500">
 								Jogo de Perguntas e Respostas
@@ -62,7 +70,7 @@ const Navbar = () => {
 						<div className="hidden sm:block sm:ml-6">
 							<div className="flex space-x-4">
 								<Link
-									to="/jogar"
+									to="/"
 									className="text-gray-500 hover:text-indigo-500 px-3 py-2 rounded-md text-sm font-medium"
 								>
 									Jogar
@@ -82,6 +90,30 @@ const Navbar = () => {
 							</div>
 						</div>
 					</div>
+					<div className="flex items-end">
+						<span className="text-gray-600 text-lg sm:text-xl">
+							{username}
+						</span>
+						<div className="relative">
+							<button
+								onClick={() =>
+									setIsDropdownOpen(!isDropdownOpen)
+								}
+							>
+								▼
+							</button>
+							{isDropdownOpen && (
+								<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
+									<button
+										onClick={handleLogout}
+										className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-500 hover:text-white"
+									>
+										Sair
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 			</div>
 			<div
@@ -90,7 +122,7 @@ const Navbar = () => {
 			>
 				<div className="px-2 pt-2 pb-3 space-y-1">
 					<Link
-						to="/jogar"
+						to="/"
 						className="text-gray-500 hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium"
 					>
 						Jogar

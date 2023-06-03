@@ -4,6 +4,7 @@ import { QuizContext, QuizDispatchContext } from './Context';
 interface ProviderProps {
 	children: React.ReactNode;
 }
+const username = localStorage.getItem('username');
 const QuizProvider = ({ children }: ProviderProps) => {
 	const [values, dispatch] = useReducer(
 		(state: any, action: any) => {
@@ -13,24 +14,24 @@ const QuizProvider = ({ children }: ProviderProps) => {
 						...state,
 						quiz: action.payload,
 					};
-					break;
+
 				case 'DEFINE_QUESTION':
 					return {
 						...state,
 						question: action.payload,
 					};
-					break;
+
 				case 'DEFINE_ANSWER':
 					return {
 						...state,
 						answer: action.payload,
 					};
-					break;
+
 				default:
 					return state;
 			}
 		},
-		{ quiz: 'teste' },
+		{ quiz: null, question: null, answer: null, username: username },
 	);
 
 	return (
