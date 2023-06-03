@@ -1,15 +1,13 @@
 import { Link } from 'gatsby';
 import React, { useContext, useState } from 'react';
-import { QuizContext, QuizDispatchContext } from '../store/Context';
+import { AppContext, ActionTypes } from '../store/Context';
 
 const Navbar = () => {
-	const { username } = useContext(QuizContext);
-	const {  } = useContext(QuizDispatchContext);
+	const { state: { username }, dispatch } = useContext(AppContext);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const handleLogout = () => {
-		localStorage.removeItem('username');
-		dispatch({ type: 'DEFINE_QUIZ', payload: null });
+		dispatch({ type: ActionTypes.SET_USERNAME, payload: null });
 	};
 
 	return (
@@ -26,9 +24,8 @@ const Navbar = () => {
 						>
 							<span className="sr-only">Open main menu</span>
 							<svg
-								className={`${
-									isOpen ? 'hidden' : 'block'
-								} h-6 w-6`}
+								className={`${isOpen ? 'hidden' : 'block'
+									} h-6 w-6`}
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -43,9 +40,8 @@ const Navbar = () => {
 								/>
 							</svg>
 							<svg
-								className={`${
-									isOpen ? 'block' : 'hidden'
-								} h-6 w-6`}
+								className={`${isOpen ? 'block' : 'hidden'
+									} h-6 w-6`}
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -91,28 +87,29 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div className="flex items-end">
-						<span className="text-gray-600 text-lg sm:text-xl">
-							{username}
-						</span>
-						<div className="relative">
-							<button
-								onClick={() =>
-									setIsDropdownOpen(!isDropdownOpen)
-								}
-							>
-								▼
-							</button>
-							{isDropdownOpen && (
-								<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
-									<button
-										onClick={handleLogout}
-										className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-500 hover:text-white"
-									>
-										Sair
-									</button>
-								</div>
-							)}
-						</div>
+						{username === null ? <span>Fazer Login</span> : (<>
+							<span className="text-gray-600 text-lg sm:text-xl">
+								{username}
+							</span>
+							<div className="relative">
+								<button
+									onClick={() =>
+										setIsDropdownOpen(!isDropdownOpen)
+									}
+								>
+									▼
+								</button>
+								{isDropdownOpen && (
+									<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
+										<button
+											onClick={handleLogout}
+											className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-500 hover:text-white"
+										>
+											Sair
+										</button>
+									</div>
+								)}
+							</div>)</>)}
 					</div>
 				</div>
 			</div>

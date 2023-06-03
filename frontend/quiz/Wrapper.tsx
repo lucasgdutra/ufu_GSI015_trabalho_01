@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Navbar from './src/components/Navbar';
-import { QuizProvider } from './src/store/Provider';
+import { AppProvider } from './src/store/Context';
 const queryClient = new QueryClient();
 
 interface WrapperProps {
@@ -9,12 +9,12 @@ interface WrapperProps {
 }
 const Wrapper: React.FC<WrapperProps> = ({ children }) => {
 	return (
-		<QuizProvider>
+		<AppProvider>
 			<QueryClientProvider client={queryClient}>
 				<Navbar />
 				{children}
 			</QueryClientProvider>
-		</QuizProvider>
+		</AppProvider>
 	);
 };
 
