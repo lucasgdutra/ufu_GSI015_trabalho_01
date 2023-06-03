@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { QuizContext } from '../store/Context';
+
 
 import { useQuery } from '@tanstack/react-query';
 import { HeadFC, PageProps, navigate } from 'gatsby';
 import { Modal } from '../components/Modal';
+import { ActionTypes, AppContext } from '../store/Context';
+
+export const Head: HeadFC = () => <title>Quiz</title>;
 
 interface QuizCardWrapperProps {
 	children: React.ReactNode;
@@ -21,15 +24,23 @@ interface QuizCardProps {
 	questionario: Questionario;
 }
 const QuizCard = ({ questionario }: QuizCardProps) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [username, setUsername] = useState('');
+	const [isOpen, setIsOpen] = useState(true);
+	const { state: { username }, dispatch } = useContext(AppContext)
+
+	useEffect(() => {
+		if (username === '' || username === null) {
+			dispatch({ type: ActionTypes.SET_USERNAME, payload: 'teste' });
+		}
+	}, [])
 
 	const handleOpen = () => {
-		if (username === '') {
+		if (username === '' || username === null) {
+			dispatch({ type: ActionTypes.SET_USERNAME, payload: 'teste' });
 			setIsOpen(true);
-		} else {
-			navigate(`/quiz/${questionario.id}`);
 		}
+		//else {
+		// 	navigate(`/quiz/${questionario.id}`);
+		// }
 	};
 
 	const handleClose = () => {
@@ -37,18 +48,14 @@ const QuizCard = ({ questionario }: QuizCardProps) => {
 	};
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUsername(event.target.value);
+		dispatch({ type: ActionTypes.SET_USERNAME, payload: event.target.value });
 	};
 
 	const handleSave = () => {
-		localStorage.setItem('username', username);
 		setIsOpen(false);
 	};
 
-	useEffect(() => {
-		const storedUsername = localStorage.getItem('username');
-		setUsername(storedUsername || 'RandomUsername');
-	}, []);
+
 	return (
 		<div className="w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:w-full m-4">
 			<div className="md:flex items-center justify-center ">
@@ -69,18 +76,18 @@ const QuizCard = ({ questionario }: QuizCardProps) => {
 								className="block text-gray-700 text-sm font-bold mb-2"
 								htmlFor="username"
 							>
-								Insira seu nome de usuário
+								Defina um nome de usuário antes de começar
 							</label>
 							<input
 								type="text"
-								value={username}
+								value={username || ''}
 								onChange={handleChange}
 								className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 								id="username"
 							/>
 							<button
 								onClick={handleSave}
-								className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-400"
+								className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
 							>
 								OK
 							</button>
@@ -110,6 +117,6 @@ const Questionario: React.FC<PageProps> = () => {
 	);
 };
 
-export const Head: HeadFC = () => <title>Quiz</title>;
+
 
 export default Questionario;
