@@ -3,6 +3,7 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
+	"postCreateCommand": "sudo chown vscode /workspace/frontend/quiz/node_modules && sudo chown vscode /workspace/frontend/quiz/.cache && sudo chown vscode /workspace/frontend/quiz/public",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -27,8 +28,8 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"MS-CEINTL.vscode-language-pack-pt-BR",
-				"streetsidesoftware.code-spell-checker",
 				"streetsidesoftware.code-spell-checker-portuguese-brazilian",
+				"streetsidesoftware.code-spell-checker",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"GitHub.copilot",
