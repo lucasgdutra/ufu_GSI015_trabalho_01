@@ -25,7 +25,6 @@ import jakarta.validation.Valid;
 public class RespostaController {
     private final RespostaService service;
 
-    @Autowired
     RespostaController(RespostaService service) {
         this.service = service;
     }

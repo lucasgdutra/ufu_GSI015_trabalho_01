@@ -13,7 +13,6 @@ import java.util.Optional;
 public class JogoService {
     private final JogoRepository jogoRepository;
 
-    @Autowired
     public JogoService(JogoRepository jogoRepository) {
         this.jogoRepository = jogoRepository;
     }
@@ -39,11 +38,13 @@ public class JogoService {
         throw new CustomNotFoundException("Jogo nao encontrado");
     }
 
-    /*public void deleteJogo(Long id) {
-        jogoRepository.deleteById(id);
-    }*/
+    /*
+     * public void deleteJogo(Long id) {
+     * jogoRepository.deleteById(id);
+     * }
+     */
 
-    public String deleteJogo(Long id){
+    public String deleteJogo(Long id) {
         Optional<Jogo> existingUser = getJogoById(id);
         if (existingUser.isPresent()) {
             Jogo user = existingUser.get();
@@ -52,7 +53,7 @@ public class JogoService {
         }
         throw new CustomNotFoundException("User not found");
     }
-    
+
     public Optional<Jogo> getJogoById(Long id) {
         return jogoRepository.findById(id);
     }
@@ -66,4 +67,3 @@ public class JogoService {
     }
 
 }
-

@@ -12,7 +12,6 @@ import java.util.Optional;
 public class QuestaoService {
     private final QuestaoRepository questaoRepository;
 
-    @Autowired
     public QuestaoService(QuestaoRepository questaoRepository) {
         this.questaoRepository = questaoRepository;
     }
@@ -29,11 +28,13 @@ public class QuestaoService {
         return questaoRepository.save(questao);
     }
 
-    /*public void deleteQuestao(Long id) {
-        questaoRepository.deleteById(id);
-    }*/
+    /*
+     * public void deleteQuestao(Long id) {
+     * questaoRepository.deleteById(id);
+     * }
+     */
 
-    public String deleteQuestao(Long id){
+    public String deleteQuestao(Long id) {
         Optional<Questao> existingQuestion = getQuestaoById(id);
         if (existingQuestion.isPresent()) {
             Questao question = existingQuestion.get();

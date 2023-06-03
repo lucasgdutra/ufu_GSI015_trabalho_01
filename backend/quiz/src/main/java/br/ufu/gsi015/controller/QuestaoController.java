@@ -25,7 +25,6 @@ import jakarta.validation.Valid;
 public class QuestaoController {
     private final QuestaoService questaoService;
 
-    @Autowired
     QuestaoController(QuestaoService questaoService) {
         this.questaoService = questaoService;
     }
@@ -83,9 +82,8 @@ public class QuestaoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteQuestao(@Valid @PathVariable Long id){
-        return new ResponseEntity<String>(questaoService.deleteQuestao(id),HttpStatus.OK);
+    public ResponseEntity<String> deleteQuestao(@Valid @PathVariable Long id) {
+        return new ResponseEntity<String>(questaoService.deleteQuestao(id), HttpStatus.OK);
     }
-
 
 }

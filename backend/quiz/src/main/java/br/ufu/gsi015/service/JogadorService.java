@@ -13,7 +13,6 @@ import java.util.Optional;
 public class JogadorService {
     private final JogadorRepository jogadorRepository;
 
-    @Autowired
     public JogadorService(JogadorRepository jogadorRepository) {
         this.jogadorRepository = jogadorRepository;
     }
@@ -51,11 +50,13 @@ public class JogadorService {
                 .orElseThrow(() -> new CustomNotFoundException("User not found"));
     }
 
-    /*public void deleteJogador(Long id) {
-        jogadorRepository.deleteById(id);
-    }*/
+    /*
+     * public void deleteJogador(Long id) {
+     * jogadorRepository.deleteById(id);
+     * }
+     */
 
-    public String deleteJogador(Long id){
+    public String deleteJogador(Long id) {
         Optional<Jogador> existingUser = getJogadorById(id);
         if (existingUser.isPresent()) {
             Jogador user = existingUser.get();

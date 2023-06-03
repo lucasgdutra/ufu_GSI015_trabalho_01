@@ -17,7 +17,6 @@ import br.ufu.gsi015.service.UsuarioService;
 public class UsuarioController {
     private final UsuarioService service;
 
-    @Autowired
     UsuarioController(UsuarioService service) {
         this.service = service;
     }

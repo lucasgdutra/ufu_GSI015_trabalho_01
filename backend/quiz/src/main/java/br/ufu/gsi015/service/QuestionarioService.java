@@ -17,7 +17,6 @@ import br.ufu.gsi015.repository.QuestionarioRepository;
 public class QuestionarioService {
     private final QuestionarioRepository questionarioRepository;
 
-    @Autowired
     public QuestionarioService(QuestionarioRepository questionarioRepository) {
         this.questionarioRepository = questionarioRepository;
     }
@@ -38,11 +37,13 @@ public class QuestionarioService {
         return questionarioRepository.save(questionario);
     }
 
-    /*public void deleteQuestionario(Long id) {
-        questionarioRepository.deleteById(id);
-    }*/
+    /*
+     * public void deleteQuestionario(Long id) {
+     * questionarioRepository.deleteById(id);
+     * }
+     */
 
-    public String deleteQuestionario(Long id){
+    public String deleteQuestionario(Long id) {
         Optional<Questionario> existingQuestionario = getQuestionarioById(id);
         if (existingQuestionario.isPresent()) {
             Questionario q = existingQuestionario.get();

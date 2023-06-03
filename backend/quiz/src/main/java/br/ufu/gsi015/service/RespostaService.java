@@ -18,7 +18,6 @@ import java.util.Optional;
 public class RespostaService {
     private final RespostaRepository respostaRepository;
 
-    @Autowired
     public RespostaService(RespostaRepository respostaRepository) {
         this.respostaRepository = respostaRepository;
     }
@@ -43,11 +42,13 @@ public class RespostaService {
         return respostaRepository.save(resposta);
     }
 
-    /*public void deleteResposta(Long id) {
-        respostaRepository.deleteById(id);
-    }*/
+    /*
+     * public void deleteResposta(Long id) {
+     * respostaRepository.deleteById(id);
+     * }
+     */
 
-    public String deleteResposta(Long id){
+    public String deleteResposta(Long id) {
         Optional<Resposta> existingResposta = getRespostaById(id);
         if (existingResposta.isPresent()) {
             Resposta r = existingResposta.get();
