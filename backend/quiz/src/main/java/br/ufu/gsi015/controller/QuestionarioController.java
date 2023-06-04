@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
+import br.ufu.gsi015.model.Questao;
 import br.ufu.gsi015.model.Questionario;
 import br.ufu.gsi015.service.QuestionarioService;
 import jakarta.validation.Valid;
@@ -37,6 +38,15 @@ public class QuestionarioController {
         Optional<Questionario> questionario = questionarioService.getQuestionarioById(id);
         if (questionario.isPresent()) {
             return new ResponseEntity<>(questionario.get(), HttpStatus.OK);
+        }
+        throw new CustomNotFoundException("Questionario nao encontrado");
+    }
+
+    @GetMapping("/{id}/questoes")
+    public ResponseEntity<Iterable<Questao>> allQuestoes(@PathVariable("id") Long id) {
+        Optional<Questionario> questionario = questionarioService.getQuestionarioById(id);
+        if (questionario.isPresent()) {
+            return new ResponseEntity<>(questionario.get().getQuestoes(), HttpStatus.OK);
         }
         throw new CustomNotFoundException("Questionario nao encontrado");
     }
