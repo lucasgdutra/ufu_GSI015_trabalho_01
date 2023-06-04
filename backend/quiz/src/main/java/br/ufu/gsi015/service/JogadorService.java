@@ -50,12 +50,6 @@ public class JogadorService {
                 .orElseThrow(() -> new CustomNotFoundException("User not found"));
     }
 
-    /*
-     * public void deleteJogador(Long id) {
-     * jogadorRepository.deleteById(id);
-     * }
-     */
-
     public String deleteJogador(Long id) {
         Optional<Jogador> existingUser = getJogadorById(id);
         if (existingUser.isPresent()) {
@@ -64,6 +58,10 @@ public class JogadorService {
             return "OK";
         }
         throw new CustomNotFoundException("User not found");
+    }
+
+    public Iterable<Jogador> getRanking() {
+        return jogadorRepository.findTop25ByOrderByPontuacaoDesc();
     }
 
 }

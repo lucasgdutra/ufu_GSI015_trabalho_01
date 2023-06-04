@@ -56,15 +56,6 @@ public class RespostaController {
         }
     }
 
-    @GetMapping("/questao/{questaoId}")
-    ResponseEntity<Iterable<Resposta>> allRespostasByQuestaoId(@PathVariable("questaoId") Long questaoId) {
-        try {
-            return new ResponseEntity<>(service.getRespostasByQuestaoId(questaoId), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
-    }
-
     @GetMapping
     ResponseEntity<Iterable<Resposta>> allRespostas() {
         try {

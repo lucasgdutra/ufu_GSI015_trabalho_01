@@ -38,12 +38,6 @@ public class JogoService {
         throw new CustomNotFoundException("Jogo nao encontrado");
     }
 
-    /*
-     * public void deleteJogo(Long id) {
-     * jogoRepository.deleteById(id);
-     * }
-     */
-
     public String deleteJogo(Long id) {
         Optional<Jogo> existingUser = getJogoById(id);
         if (existingUser.isPresent()) {
