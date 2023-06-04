@@ -3,6 +3,8 @@ package br.ufu.gsi015.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class Questionario {
 
     @OneToMany(mappedBy = "questionario")
     @NotNull(message = "O questionário deve ter pelo menos uma questão")
+    @JsonIgnore
     private List<Questao> questoes;
 
     public Questionario() {
