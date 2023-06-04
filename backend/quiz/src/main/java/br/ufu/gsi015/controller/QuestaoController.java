@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Questao;
+import br.ufu.gsi015.model.Resposta;
 import br.ufu.gsi015.service.QuestaoService;
 import jakarta.validation.Valid;
 
@@ -34,6 +35,19 @@ public class QuestaoController {
             Optional<Questao> questao = questaoService.getQuestaoById(id);
             if (questao.isPresent()) {
                 return new ResponseEntity<>(questao.get(), HttpStatus.OK);
+            }
+            throw new CustomNotFoundException("Questao nao encontrada");
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/respostas")
+    ResponseEntity<Iterable<Resposta>> getRespostas(@PathVariable("id") Long id) {
+        try {
+            Optional<Questao> questao = questaoService.getQuestaoById(id);
+            if (questao.isPresent()) {
+                return new ResponseEntity<>(questao.get().getRespostas(), HttpStatus.OK);
             }
             throw new CustomNotFoundException("Questao nao encontrada");
         } catch (Exception e) {
