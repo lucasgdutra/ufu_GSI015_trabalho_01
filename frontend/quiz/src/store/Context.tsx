@@ -1,18 +1,17 @@
 import React, { createContext, Reducer, useReducer } from 'react';
 
-const windowGlobal = typeof window !== 'undefined' && window
-const localStorage = windowGlobal ? windowGlobal.localStorage : null
-
+const windowGlobal = typeof window !== 'undefined' && window;
+const localStorage = windowGlobal ? windowGlobal.localStorage : null;
 
 type InitialStateType = {
 	username: string | null;
-}
+};
 
 const initialState: InitialStateType = {
-	username: localStorage?.getItem('username') || null
-}
+	username: localStorage?.getItem('username') || null,
+};
 enum ActionTypes {
-	SET_USERNAME = 'SET_USERNAME'
+	SET_USERNAME = 'SET_USERNAME',
 }
 interface Action {
 	type: ActionTypes;
@@ -30,16 +29,14 @@ const reducer: Reducer<InitialStateType, Action> = (state, action) => {
 		default:
 			return state;
 	}
-}
-
-
+};
 
 const AppContext = createContext<{
-	state: InitialStateType,
-	dispatch: React.Dispatch<Action>
+	state: InitialStateType;
+	dispatch: React.Dispatch<Action>;
 }>({
 	state: initialState,
-	dispatch: () => null
+	dispatch: () => null,
 });
 
 interface AppProviderProps {
@@ -52,7 +49,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
 		<AppContext.Provider value={{ state, dispatch }}>
 			{children}
 		</AppContext.Provider>
-	)
-}
+	);
+};
 
 export { AppContext, AppProvider, ActionTypes };
