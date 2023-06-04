@@ -38,6 +38,11 @@ public class JogadorController {
                 .orElseThrow(() -> new CustomNotFoundException("User not found"));
     }
 
+    @GetMapping("/ranking")
+    public ResponseEntity<Iterable<Jogador>> ranking() {
+        return ResponseEntity.ok(jogadorService.getRanking());
+    }
+
     @PostMapping
     public ResponseEntity<Jogador> newPlayer(@Valid @RequestBody Jogador newEntity) {
         Jogador createdUser = jogadorService.createJogador(newEntity);
@@ -51,7 +56,7 @@ public class JogadorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteJogador(@Valid @PathVariable Long id){
-        return new ResponseEntity<String>(jogadorService.deleteJogador(id),HttpStatus.OK);
+    public ResponseEntity<String> deleteJogador(@Valid @PathVariable Long id) {
+        return new ResponseEntity<String>(jogadorService.deleteJogador(id), HttpStatus.OK);
     }
 }

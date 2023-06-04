@@ -27,6 +27,15 @@ public class JogoController {
         this.jogoService = jogoService;
     }
 
+    @GetMapping
+    ResponseEntity<Iterable<Jogo>> allJogos() {
+        try {
+            return new ResponseEntity<>(jogoService.getAllJogos(), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     ResponseEntity<Jogo> oneJogo(@PathVariable("id") Long id) {
         try {
@@ -40,10 +49,10 @@ public class JogoController {
         }
     }
 
-    @GetMapping
-    ResponseEntity<Iterable<Jogo>> allJogos() {
+    @GetMapping("/ranking")
+    ResponseEntity<Iterable<Jogo>> ranking() {
         try {
-            return new ResponseEntity<>(jogoService.getAllJogos(), HttpStatus.OK);
+            return new ResponseEntity<>(jogoService.getRankedGames(), HttpStatus.OK);
         } catch (Exception e) {
             throw new CustomInternalErrorException(e.getMessage());
         }
@@ -55,12 +64,13 @@ public class JogoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Jogo> replaceJogo(@RequestBody Jogo jogo, @PathVariable("id") Long id) {
+    public ResponseEntity<Jogo> updateJogo(@RequestBody Jogo jogo, @PathVariable("id") Long id) {
         return new ResponseEntity<>(jogoService.updateJogo(jogo, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteJogo(@PathVariable Long id){
-        return new ResponseEntity<String>(jogoService.deleteJogo(id),HttpStatus.OK);
+    public ResponseEntity<String> deleteJogo(@PathVariable Long id) {
+        return new ResponseEntity<String>(jogoService.deleteJogo(id), HttpStatus.OK);
     }
+
 }
