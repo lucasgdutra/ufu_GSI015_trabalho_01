@@ -1,19 +1,23 @@
-import { Link } from 'gatsby';
+import { Link, navigate } from 'gatsby';
 import React, { useContext, useState } from 'react';
 import { AppContext, ActionTypes } from '../store/Context';
 
 const Navbar = () => {
-	const { state: { username }, dispatch } = useContext(AppContext);
+	const {
+		state: { username },
+		dispatch,
+	} = useContext(AppContext);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const handleLogout = () => {
 		dispatch({ type: ActionTypes.SET_USERNAME, payload: null });
+		navigate('/');
 	};
 
 	return (
 		<nav className="bg-white shadow-md">
-			<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-				<div className="relative flex items-center justify-between h-16">
+			<div className="mx-auto px-2 sm:px-6 lg:px-8">
+				<div className="relative flex items-center h-16">
 					<div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
 						<button
 							type="button"
@@ -24,8 +28,9 @@ const Navbar = () => {
 						>
 							<span className="sr-only">Open main menu</span>
 							<svg
-								className={`${isOpen ? 'hidden' : 'block'
-									} h-6 w-6`}
+								className={`${
+									isOpen ? 'hidden' : 'block'
+								} h-6 w-6`}
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -40,8 +45,9 @@ const Navbar = () => {
 								/>
 							</svg>
 							<svg
-								className={`${isOpen ? 'block' : 'hidden'
-									} h-6 w-6`}
+								className={`${
+									isOpen ? 'block' : 'hidden'
+								} h-6 w-6`}
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -66,7 +72,7 @@ const Navbar = () => {
 						<div className="hidden sm:block sm:ml-6">
 							<div className="flex space-x-4">
 								<Link
-									to="/"
+									to="/jogar"
 									className="text-gray-500 hover:text-indigo-500 px-3 py-2 rounded-md text-sm font-medium"
 								>
 									Jogar
@@ -87,29 +93,32 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div className="flex items-end">
-						{username === null ? <span>Fazer Login</span> : (<>
-							<span className="text-gray-600 text-lg sm:text-xl">
-								{username}
-							</span>
-							<div className="relative">
-								<button
-									onClick={() =>
-										setIsDropdownOpen(!isDropdownOpen)
-									}
-								>
-									▼
-								</button>
-								{isDropdownOpen && (
-									<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
-										<button
-											onClick={handleLogout}
-											className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-500 hover:text-white"
-										>
-											Sair
-										</button>
-									</div>
-								)}
-							</div>)</>)}
+						{username === null ? (
+							<Link to="/login">Fazer Login</Link>
+						) : (
+							<>
+								<div className="relative">
+									<button
+										className="text-gray-600 text-lg sm:text-xl"
+										onClick={() =>
+											setIsDropdownOpen(!isDropdownOpen)
+										}
+									>
+										{username}
+									</button>
+									{isDropdownOpen && (
+										<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
+											<button
+												onClick={handleLogout}
+												className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-500 hover:text-white"
+											>
+												Sair
+											</button>
+										</div>
+									)}
+								</div>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
@@ -119,7 +128,7 @@ const Navbar = () => {
 			>
 				<div className="px-2 pt-2 pb-3 space-y-1">
 					<Link
-						to="/"
+						to="/jogar"
 						className="text-gray-500 hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium"
 					>
 						Jogar
