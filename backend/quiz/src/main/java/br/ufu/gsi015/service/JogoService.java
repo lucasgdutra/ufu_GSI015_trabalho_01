@@ -1,5 +1,6 @@
 package br.ufu.gsi015.service;
 
+import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Jogo;
 import br.ufu.gsi015.repository.JogoRepository;
@@ -14,46 +15,67 @@ public class JogoService {
     private final JogoRepository jogoRepository;
 
     public JogoService(JogoRepository jogoRepository) {
-        this.jogoRepository = jogoRepository;
+        try {
+            this.jogoRepository = jogoRepository;
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
+    public Jogo getJogoById(Long id) {
+        try {
+            Optional<Jogo> existing = jogoRepository.findById(id);
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+            throw new CustomNotFoundException("Jogo nao encontrado");
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
     public Iterable<Jogo> getAllJogos() {
-        return jogoRepository.findAll();
+        try {
+            return jogoRepository.findAll();
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+
     }
 
-    public Jogo saveJogo(Jogo jogo) {
-        return jogoRepository.save(jogo);
+    public Jogo createJogo(Jogo jogo) {
+        try {
+            return jogoRepository.save(jogo);
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
     public Jogo updateJogo(Jogo jogo, Long id) {
-        Optional<Jogo> jogoOptional = jogoRepository.findById(id);
-        if (jogoOptional.isPresent()) {
-            Jogo jogoAtual = jogoOptional.get();
-            jogoAtual.setJogador(jogo.getJogador() == null ? jogoAtual.getJogador() : jogo.getJogador());
-            jogoAtual.setPontuacao(jogo.getPontuacao() == null ? jogoAtual.getPontuacao() : jogo.getPontuacao());
-            jogoAtual.setQuestionario(
-                    jogo.getQuestionario() == null ? jogoAtual.getQuestionario() : jogo.getQuestionario());
-            return jogoRepository.save(jogoAtual);
+        try {
+            Jogo existing = getJogoById(id);
+            if (jogo.getJogador() != null)
+                existing.setJogador(jogo.getJogador());
+            if (jogo.getPontuacao() != null)
+                existing.setPontuacao(jogo.getPontuacao());
+            if (jogo.getQuestionario() != null)
+                existing.setQuestionario(jogo.getQuestionario());
+            return jogoRepository.save(existing);
+
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        throw new CustomNotFoundException("Jogo nao encontrado");
     }
 
     public String deleteJogo(Long id) {
-        Optional<Jogo> existingUser = getJogoById(id);
-        if (existingUser.isPresent()) {
-            Jogo user = existingUser.get();
-            jogoRepository.delete(user);
+        try {
+            Jogo existing = getJogoById(id);
+            jogoRepository.delete(existing);
             return "OK";
+
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        throw new CustomNotFoundException("User not found");
-    }
-
-    public Optional<Jogo> getJogoById(Long id) {
-        return jogoRepository.findById(id);
-    }
-
-    public Jogo updateJogo(Jogo jogo) {
-        return jogoRepository.save(jogo);
     }
 
     public List<Jogo> getRankedGames() {

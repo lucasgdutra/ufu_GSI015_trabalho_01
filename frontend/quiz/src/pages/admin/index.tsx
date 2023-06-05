@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext, useState, startTransition } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Navbar } from '../../components/Navbar';
@@ -17,7 +17,7 @@ const deleteQuiz = async (id: Questionario['id']) => {
 	}
 };
 
-const AdminPage: React.FC = () => {
+const AdminPage: FC = () => {
 	const {
 		state: { username },
 	} = useContext(AppContext);
@@ -29,12 +29,26 @@ const AdminPage: React.FC = () => {
 		queryFn: fetchQuizzes,
 		enabled: username !== undefined && username !== '' && username !== null,
 	});
+	const [alertMessage, setAlertMessage] = useState<string>('');
 
 	const mutation = useMutation(deleteQuiz, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['quizzes']);
+			startTransition(() => {
+				setAlertMessage('Questionario deletado com sucesso');
+				setTimeout(() => {
+					setAlertMessage('');
+				}, 5000);
+			});
 		},
 	});
+
+	const handleDeleteQuiz = (id: Questionario['id']) => {
+		startTransition(() => {
+			setAlertMessage('Deletando questionario de ID: ' + id + '...');
+		});
+		mutation.mutate(id);
+	};
 
 	if (isLoading) return <div>Carregando...</div>;
 	if (error)
@@ -48,6 +62,15 @@ const AdminPage: React.FC = () => {
 				<button className="px-4 py-2 bg-green-500 text-white rounded">
 					Adicionar novo questionário
 				</button>
+				{alertMessage && (
+					<div
+						className={
+							'alert mt-4 px-6 py-3 rounded shadow bg-blue-500'
+						}
+					>
+						{alertMessage}
+					</div>
+				)}
 				<table className="table-auto min-w-full divide-y divide-gray-200">
 					<thead className="bg-gray-50">
 						<tr>
@@ -76,11 +99,18 @@ const AdminPage: React.FC = () => {
 									</span>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">
-									<button className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+									<button
+										className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+										onClick={() =>
+											navigate(`/admin/quiz/${quiz.id}`)
+										}
+									>
 										Editar
 									</button>
 									<button
-										onClick={() => mutation.mutate(quiz.id)}
+										onClick={() =>
+											handleDeleteQuiz(quiz.id)
+										}
 										className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
 									>
 										Deletar

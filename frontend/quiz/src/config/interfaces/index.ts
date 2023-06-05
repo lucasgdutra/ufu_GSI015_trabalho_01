@@ -1,6 +1,7 @@
 interface Resposta {
   id?: number;
   resposta: string;
+  correta?: boolean;
 }
 
 interface Questao {

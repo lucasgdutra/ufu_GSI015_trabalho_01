@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Jogador;
 
 import br.ufu.gsi015.service.JogadorService;
@@ -28,31 +27,29 @@ public class JogadorController {
 
     @GetMapping
     public ResponseEntity<Iterable<Jogador>> allPlayers() {
-        return ResponseEntity.ok(jogadorService.getAllJogadores());
+        return new ResponseEntity<>(jogadorService.getAllJogadores(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Jogador> onePlayer(@PathVariable Long id) {
-        return jogadorService.getJogadorById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new CustomNotFoundException("User not found"));
+        return new ResponseEntity<>(jogadorService.getJogadorById(id), HttpStatus.OK);
     }
 
     @GetMapping("/ranking")
     public ResponseEntity<Iterable<Jogador>> ranking() {
-        return ResponseEntity.ok(jogadorService.getRanking());
+        return new ResponseEntity<>(jogadorService.getRanking(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Jogador> newPlayer(@Valid @RequestBody Jogador newEntity) {
         Jogador createdUser = jogadorService.createJogador(newEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return new ResponseEntity<>(createdUser, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Jogador> updatePlayer(@Valid @PathVariable Long id, @RequestBody Jogador newEntity) {
         Jogador updatedUser = jogadorService.updateJogador(id, newEntity);
-        return ResponseEntity.ok(updatedUser);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

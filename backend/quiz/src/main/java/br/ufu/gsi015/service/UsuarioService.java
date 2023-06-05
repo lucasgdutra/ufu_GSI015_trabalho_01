@@ -1,5 +1,7 @@
 package br.ufu.gsi015.service;
 
+import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
+import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Usuario;
 import br.ufu.gsi015.repository.UsuarioRepository;
 
@@ -12,19 +14,31 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        try {
+            this.usuarioRepository = usuarioRepository;
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
+    public Usuario getUsuarioById(Long id) {
+        try {
+            Optional<Usuario> existing = usuarioRepository.findById(id);
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+            throw new CustomNotFoundException("Usuario nao encontrado");
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
     public Iterable<Usuario> getAllUsuarios() {
-        return usuarioRepository.findAll();
-    }
-
-    public Optional<Usuario> getUsuarioById(Long id) {
-        return usuarioRepository.findById(id);
-    }
-
-    public Optional<Usuario> getUsuarioByEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+        try {
+            return usuarioRepository.findAll();
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
 }

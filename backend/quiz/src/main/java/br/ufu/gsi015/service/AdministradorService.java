@@ -1,6 +1,7 @@
 package br.ufu.gsi015.service;
 
 import br.ufu.gsi015.controller.exceptions.CustomConflictException;
+import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Administrador;
 import br.ufu.gsi015.repository.AdministradorRepository;
@@ -13,47 +14,69 @@ public class AdministradorService {
     private final AdministradorRepository repository;
 
     public AdministradorService(AdministradorRepository repository) {
-        this.repository = repository;
+        try {
+            this.repository = repository;
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
-    public Optional<Administrador> getAdministradorById(Long id) {
-        return repository.findById(id);
+    public Administrador getAdministradorById(Long id) {
+        try {
+            Optional<Administrador> existingAdmin = repository.findById(id);
+            if (existingAdmin.isPresent()) {
+                return existingAdmin.get();
+            }
+            throw new CustomNotFoundException("Admin not found");
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
     public Iterable<Administrador> getAllAdministradores() {
-        return repository.findAll();
-    }
-
-    public Optional<Administrador> getAdministradorByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
-    public Administrador saveAdministrador(Administrador newEntity) {
-        Optional<Administrador> existingUser = getAdministradorByEmail(newEntity.getEmail());
-        if (existingUser.isPresent()) {
-            throw new CustomConflictException("User with this email already exists");
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        return repository.save(newEntity);
+    }
+
+    public Administrador createAdministrador(Administrador newEntity) {
+        try {
+            Optional<Administrador> existingAdmin = repository.findById(newEntity.getId());
+            if (existingAdmin.isPresent()) {
+                throw new CustomConflictException("Admin already exists");
+            }
+            return repository.save(newEntity);
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
     public Administrador updateAdministrador(Long id, Administrador newEntity) {
-        Optional<Administrador> existingUser = getAdministradorById(id);
-        if (existingUser.isPresent()) {
-            Administrador updatedUser = existingUser.get();
-            updatedUser.setName(newEntity.getName() != null ? newEntity.getName() : updatedUser.getName());
-            updatedUser.setEmail(newEntity.getEmail() != null ? newEntity.getEmail() : updatedUser.getEmail());
-            return repository.save(updatedUser);
+        try {
+            Administrador existingUser = getAdministradorById(id);
+            if (newEntity.getName() != null) {
+                existingUser.setName(newEntity.getName());
+            }
+            if (newEntity.getEmail() != null) {
+                existingUser.setEmail(newEntity.getEmail());
+            }
+
+            return repository.save(existingUser);
+
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        throw new CustomNotFoundException("User not found");
     }
 
-    public String deleteAdministrador(Long id){
-        Optional<Administrador> existingUser = getAdministradorById(id);
-        if (existingUser.isPresent()) {
-            Administrador user = existingUser.get();
-            repository.delete(user);
+    public String deleteAdministrador(Long id) {
+        try {
+            Administrador existingUser = getAdministradorById(id);
+            repository.delete(existingUser);
             return "OK";
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        throw new CustomNotFoundException("User not found");
     }
 }

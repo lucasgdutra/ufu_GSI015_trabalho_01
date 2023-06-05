@@ -29,8 +29,8 @@ public class Resposta {
     private String resposta;
 
     @NotBlank(message = "correta nao pode ser nulo")
-    @JsonIgnore
     @Column(nullable = false)
+
     private Boolean correta;
 
     protected Resposta() {
@@ -56,12 +56,12 @@ public class Resposta {
         return resposta;
     }
 
-    public Boolean getCorreta() {
-        return correta;
-    }
-
     public void setResposta(String resposta) {
         this.resposta = resposta;
+    }
+
+    public Boolean getCorreta() {
+        return correta;
     }
 
     public void setCorreta(Boolean correta) {

@@ -1,7 +1,5 @@
 package br.ufu.gsi015.controller;
 
-import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,15 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
-import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Questao;
 import br.ufu.gsi015.model.Resposta;
 import br.ufu.gsi015.service.QuestaoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/questoes")
+@RequestMapping("/api/admin/questoes")
 public class QuestaoController {
     private final QuestaoService questaoService;
 
@@ -31,67 +27,22 @@ public class QuestaoController {
 
     @GetMapping("/{id}")
     ResponseEntity<Questao> oneQuestao(@PathVariable("id") Long id) {
-        try {
-            Optional<Questao> questao = questaoService.getQuestaoById(id);
-            if (questao.isPresent()) {
-                return new ResponseEntity<>(questao.get(), HttpStatus.OK);
-            }
-            throw new CustomNotFoundException("Questao nao encontrada");
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        return new ResponseEntity<>(questaoService.getQuestaoById(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/respostas")
     ResponseEntity<Iterable<Resposta>> getRespostas(@PathVariable("id") Long id) {
-        try {
-            Optional<Questao> questao = questaoService.getQuestaoById(id);
-            if (questao.isPresent()) {
-                return new ResponseEntity<>(questao.get().getRespostas(), HttpStatus.OK);
-            }
-            throw new CustomNotFoundException("Questao nao encontrada");
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
-    }
-
-    @GetMapping
-    ResponseEntity<Iterable<Questao>> allQuestoes() {
-        try {
-            return new ResponseEntity<>(questaoService.getAllQuestoes(), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        return new ResponseEntity<>(questaoService.getRespostasByQuestaoId(id), HttpStatus.OK);
     }
 
     @PostMapping
     ResponseEntity<Questao> newQuestao(@Valid @RequestBody Questao questao) {
-        try {
-            return new ResponseEntity<>(questaoService.saveQuestao(questao), HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        return new ResponseEntity<>(questaoService.saveQuestao(questao), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Questao> replaceQuestao(@Valid @RequestBody Questao questao, @PathVariable("id") Long id) {
-        try {
-            Optional<Questao> questaoOptional = questaoService.getQuestaoById(id);
-            if (!questaoOptional.isPresent()) {
-                throw new CustomNotFoundException("Questao nao encontrada");
-            }
-            Questao questaoAtual = questaoOptional.get();
-            questaoAtual
-                    .setPergunta(questao.getPergunta() == null ? questaoAtual.getPergunta() : questao.getPergunta());
-            questaoAtual.setPontuacao(
-                    questao.getPontuacao() == null ? questaoAtual.getPontuacao() : questao.getPontuacao());
-
-            questaoService.saveQuestao(questaoAtual);
-            return new ResponseEntity<>(questaoAtual, HttpStatus.OK);
-
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+    ResponseEntity<Questao> updateQuestao(@Valid @RequestBody Questao questao, @PathVariable("id") Long id) {
+        return new ResponseEntity<>(questaoService.updateQuestao(questao, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

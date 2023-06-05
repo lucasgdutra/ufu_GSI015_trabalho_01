@@ -1,5 +1,6 @@
 package br.ufu.gsi015.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Usuario;
 import br.ufu.gsi015.service.UsuarioService;
 
@@ -22,14 +22,12 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     ResponseEntity<Usuario> oneUser(@PathVariable("id") Long id) {
-        return service.getUsuarioById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new CustomNotFoundException("Usuário não encontrado"));
+        return new ResponseEntity<>(service.getUsuarioById(id), HttpStatus.OK);
     }
 
     @GetMapping
     ResponseEntity<Iterable<Usuario>> allUsers() {
-        return ResponseEntity.ok(service.getAllUsuarios());
+        return new ResponseEntity<>(service.getAllUsuarios(), HttpStatus.OK);
     }
 
 }

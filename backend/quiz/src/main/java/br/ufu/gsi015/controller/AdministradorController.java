@@ -3,7 +3,6 @@ package br.ufu.gsi015.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Administrador;
 import br.ufu.gsi015.service.AdministradorService;
 
@@ -25,13 +24,12 @@ public class AdministradorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Administrador> oneAdministrator(@PathVariable Long id) {
-        return new ResponseEntity<>(service.getAdministradorById(id)
-                .orElseThrow(() -> new CustomNotFoundException("Administrator not found")), HttpStatus.OK);
+        return new ResponseEntity<>(service.getAdministradorById(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Administrador> newAdministrator(@Valid @RequestBody Administrador newEntity) {
-        return new ResponseEntity<>(service.saveAdministrador(newEntity), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.createAdministrador(newEntity), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -41,7 +39,7 @@ public class AdministradorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAdministrador(@Valid @PathVariable Long id){
-        return new ResponseEntity<String>(service.deleteAdministrador(id),HttpStatus.OK);
+    public ResponseEntity<String> deleteAdministrador(@Valid @PathVariable Long id) {
+        return new ResponseEntity<String>(service.deleteAdministrador(id), HttpStatus.OK);
     }
 }

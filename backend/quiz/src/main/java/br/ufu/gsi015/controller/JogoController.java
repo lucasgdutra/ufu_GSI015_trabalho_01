@@ -1,7 +1,5 @@
 package br.ufu.gsi015.controller;
 
-import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
-import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
 import br.ufu.gsi015.model.Jogo;
 import br.ufu.gsi015.service.JogoService;
 
@@ -29,38 +25,23 @@ public class JogoController {
 
     @GetMapping
     ResponseEntity<Iterable<Jogo>> allJogos() {
-        try {
-            return new ResponseEntity<>(jogoService.getAllJogos(), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        return new ResponseEntity<>(jogoService.getAllJogos(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<Jogo> oneJogo(@PathVariable("id") Long id) {
-        try {
-            Optional<Jogo> jogo = jogoService.getJogoById(id);
-            if (jogo.isPresent()) {
-                return new ResponseEntity<>(jogo.get(), HttpStatus.OK);
-            }
-            throw new CustomNotFoundException("Jogo nao encontrado");
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        Jogo jogo = jogoService.getJogoById(id);
+        return new ResponseEntity<>(jogo, HttpStatus.OK);
     }
 
     @GetMapping("/ranking")
     ResponseEntity<Iterable<Jogo>> ranking() {
-        try {
-            return new ResponseEntity<>(jogoService.getRankedGames(), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomInternalErrorException(e.getMessage());
-        }
+        return new ResponseEntity<>(jogoService.getRankedGames(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Jogo> newJogo(@RequestBody Jogo jogo) {
-        return new ResponseEntity<>(jogoService.saveJogo(jogo), HttpStatus.CREATED);
+        return new ResponseEntity<>(jogoService.createJogo(jogo), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

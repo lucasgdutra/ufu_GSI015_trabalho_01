@@ -27,6 +27,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 		if (!selectedAnswer || isAnswerChecked) return;
 
 		(async () => {
+			setAlertMessage('Verificando resposta...');
 			const isCorrect: boolean = await fetch(
 				`/api/respostas/${selectedAnswer.id}/correta`,
 			).then((res) => res.json());
@@ -77,6 +78,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 					className={`alert mt-4 px-6 py-3 rounded shadow ${
 						alertMessage === 'Resposta correta'
 							? 'bg-green-500'
+							: alertMessage === 'Verificando resposta...'
+							? 'bg-blue-500'
 							: 'bg-red-500'
 					}`}
 				>

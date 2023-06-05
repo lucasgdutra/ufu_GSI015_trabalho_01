@@ -1,17 +1,14 @@
 package br.ufu.gsi015.service;
 
+import br.ufu.gsi015.controller.exceptions.CustomInternalErrorException;
 import br.ufu.gsi015.controller.exceptions.CustomNotFoundException;
-import br.ufu.gsi015.controller.exceptions.DatabaseException;
-import br.ufu.gsi015.controller.exceptions.ServiceException;
+
 import br.ufu.gsi015.model.Resposta;
 
 import br.ufu.gsi015.repository.RespostaRepository;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,44 +19,61 @@ public class RespostaService {
         this.respostaRepository = respostaRepository;
     }
 
-    public Iterable<Resposta> getAllRespostas() {
+    public Resposta getRespostaById(Long id) {
         try {
-            List<Resposta> respostas = (List<Resposta>) respostaRepository.findAll();
-            return respostas != null ? respostas : new ArrayList<>();
-
-        } catch (DataAccessException e) {
-            throw new DatabaseException("Error accessing the database");
+            Optional<Resposta> existing = respostaRepository.findById(id);
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+            throw new CustomNotFoundException("Resposta nao encontrada");
         } catch (Exception e) {
-            throw new ServiceException("An unexpected error occurred");
+            throw new CustomInternalErrorException(e.getMessage());
         }
     }
 
-    public Optional<Resposta> getRespostaById(Long id) {
-        return respostaRepository.findById(id);
+    public Boolean getRespostaIsCorrectById(Long id) {
+        try {
+            Resposta existing = getRespostaById(id);
+            return existing.getCorreta();
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
-    public Resposta saveResposta(Resposta resposta) {
-        return respostaRepository.save(resposta);
+    public Resposta createResposta(Resposta resposta) {
+        try {
+            return respostaRepository.save(resposta);
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
     }
 
-    /*
-     * public void deleteResposta(Long id) {
-     * respostaRepository.deleteById(id);
-     * }
-     */
+    public Resposta updateResposta(Resposta resposta, Long id) {
+        try {
+            Resposta existing = getRespostaById(id);
+            if (resposta.getCorreta() != null) {
+                existing.setCorreta(resposta.getCorreta());
+            }
+            if (resposta.getResposta() != null) {
+                existing.setResposta(resposta.getResposta());
+            }
+            if (resposta.getQuestao() != null) {
+                existing.setQuestao(resposta.getQuestao());
+            }
+            return respostaRepository.save(existing);
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
 
     public String deleteResposta(Long id) {
-        Optional<Resposta> existingResposta = getRespostaById(id);
-        if (existingResposta.isPresent()) {
-            Resposta r = existingResposta.get();
-            respostaRepository.delete(r);
+        try {
+            Resposta existing = getRespostaById(id);
+            respostaRepository.delete(existing);
             return "OK";
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
         }
-        throw new CustomNotFoundException("User not found");
-    }
-
-    public Iterable<Resposta> getRespostasByQuestaoId(Long questaoId) {
-        return respostaRepository.findRespostasByQuestaoId(questaoId);
     }
 
 }
