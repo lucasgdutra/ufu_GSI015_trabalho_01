@@ -23,3 +23,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # [Optional] Uncomment this line to install global node packages.
 #RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
+
+RUN su vscode -c "cd /workspace && git clone https://github.com/lucasgdutra/ufu_GSI015_trabalho_01.git . && cd /workspace/frontend/quiz && yarn install && cd /workspace/backend/quiz && mvn clean package spring-boot:repackage"

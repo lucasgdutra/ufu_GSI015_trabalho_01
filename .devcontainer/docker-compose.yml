@@ -2,9 +2,7 @@ version: '3.8'
 
 volumes:
     postgres-data:
-    node-modules:
-    gatsby-cache:
-    gatsby-public:
+    workspace-data:
 
 services:
     app:
@@ -26,10 +24,7 @@ services:
                 NODE_VERSION: 'lts/*'
 
         volumes:
-            - ..:/workspace:cached
-            - node-modules:/workspace/frontend/quiz/node_modules:delegated
-            - gatsby-cache:/workspace/frontend/quiz/.cache:delegated
-            - gatsby-public:/workspace/frontend/quiz/public:delegated
+            - workspace-data:/workspace
 
         # Overrides default command so things don't shut down after the process ends.
         command: sleep infinity
