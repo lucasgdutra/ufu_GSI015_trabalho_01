@@ -1,4 +1,10 @@
-import React, { FC, useContext, useState, startTransition } from 'react';
+import React, {
+	FC,
+	useContext,
+	useState,
+	startTransition,
+	useEffect,
+} from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Navbar } from '../../components/Navbar';
@@ -21,7 +27,11 @@ const AdminPage: FC = () => {
 	const {
 		state: { username },
 	} = useContext(AppContext);
-	if (username === '' || username === null) navigate('/login');
+	useEffect(() => {
+		if (username === '' || username === null) {
+			navigate('/login');
+		}
+	}, [username]);
 
 	const queryClient = useQueryClient();
 	const { data, isLoading, error } = useQuery<Questionario[]>({

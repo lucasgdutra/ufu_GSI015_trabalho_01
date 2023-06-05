@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { PageProps, navigate } from 'gatsby';
@@ -11,7 +11,12 @@ const QuizEdit: FC<PageProps> = ({ params }) => {
 	const {
 		state: { username },
 	} = useContext(AppContext);
-	if (username === '' || username === null) navigate('/login');
+
+	useEffect(() => {
+		if (username === '' || username === null) {
+			navigate('/login');
+		}
+	}, [username]);
 
 	const { id } = params;
 	const { data, isLoading, error } = useQuery<Questionario>({

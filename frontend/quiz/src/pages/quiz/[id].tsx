@@ -94,7 +94,11 @@ const QuizPage: FC<PageProps> = ({ params }) => {
 	const {
 		state: { username },
 	} = useContext(AppContext);
-	if (username === '' || username === null) navigate('/login');
+	useEffect(() => {
+		if (username === '' || username === null) {
+			navigate('/login');
+		}
+	}, [username]);
 
 	const { id } = params;
 	const { data, isLoading, isError } = useQuery<Questao[]>({

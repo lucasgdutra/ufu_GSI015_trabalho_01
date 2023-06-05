@@ -1,14 +1,16 @@
 import React, { createContext, Reducer, useReducer } from 'react';
 
-const windowGlobal = typeof window !== 'undefined' && window;
-const localStorage = windowGlobal ? windowGlobal.localStorage : null;
+let localStorage: Storage | undefined = undefined;
+if (typeof window !== 'undefined') {
+	localStorage = window.localStorage;
+}
 
 type InitialStateType = {
 	username: string | null;
 };
 
 const initialState: InitialStateType = {
-	username: localStorage?.getItem('username') || null,
+	username: null, //localStorage?.getItem('username') || null,
 };
 enum ActionTypes {
 	SET_USERNAME = 'SET_USERNAME',
@@ -21,10 +23,10 @@ const reducer: Reducer<InitialStateType, Action> = (state, action) => {
 	switch (action.type) {
 		case ActionTypes.SET_USERNAME:
 			if (action.payload === '' || action.payload === null) {
-				localStorage?.removeItem('username');
+				//localStorage?.removeItem('username');
 				return { ...state, username: null };
 			}
-			localStorage?.setItem('username', action.payload);
+			//localStorage?.setItem('username', action.payload);
 			return { ...state, username: action.payload };
 		default:
 			return state;

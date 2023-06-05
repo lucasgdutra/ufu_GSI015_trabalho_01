@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { HeadFC, PageProps, navigate } from 'gatsby';
 
 import Navbar from '../components/Navbar';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '../store/Context';
 
 export const Head: HeadFC = () => <title>Quiz</title>;
@@ -50,7 +50,12 @@ const Questionario: React.FC<PageProps> = () => {
 	const {
 		state: { username },
 	} = useContext(AppContext);
-	if (username === '' || username === null) navigate('/login');
+
+	useEffect(() => {
+		if (username === '' || username === null) {
+			navigate('/login');
+		}
+	}, [username]);
 
 	const { data, isLoading, isError } = useQuery<Questionario[]>({
 		queryKey: ['questionarios'],

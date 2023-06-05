@@ -26,14 +26,14 @@
 
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"MS-CEINTL.vscode-language-pack-pt-BR",
-				"streetsidesoftware.code-spell-checker-portuguese-brazilian",
 				"streetsidesoftware.code-spell-checker",
+				"MS-CEINTL.vscode-language-pack-pt-BR",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"GitHub.copilot",
 				"mtxr.sqltools",
-				"mtxr.sqltools-driver-pg"
+				"mtxr.sqltools-driver-pg",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
