@@ -16,9 +16,12 @@ services:
         build: ./backend
         ports:
             - '8080:8080'
+        restart: unless-stopped
         depends_on:
             - db
         env_file: .env
+        environment:
+            - POSTGRES_HOST=db
         networks:
             - app_network
         # network_mode: service:db
@@ -35,6 +38,7 @@ services:
         ports:
             - '8000:8000'
             - '80:80'
+        restart: unless-stopped
         depends_on:
             - backend
         networks:
