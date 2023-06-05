@@ -43,7 +43,7 @@ public class AdministradorService {
 
     public Administrador createAdministrador(Administrador newEntity) {
         try {
-            Optional<Administrador> existingAdmin = repository.findById(newEntity.getId());
+            Optional<Administrador> existingAdmin = repository.findByName(newEntity.getName());
             if (existingAdmin.isPresent()) {
                 throw new CustomConflictException("Admin already exists");
             }

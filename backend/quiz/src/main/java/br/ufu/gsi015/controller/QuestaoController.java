@@ -17,7 +17,7 @@ import br.ufu.gsi015.service.QuestaoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin/questoes")
+@RequestMapping("/api/questoes")
 public class QuestaoController {
     private final QuestaoService questaoService;
 
@@ -41,7 +41,7 @@ public class QuestaoController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Questao> updateQuestao(@Valid @RequestBody Questao questao, @PathVariable("id") Long id) {
+    ResponseEntity<Questao> updateQuestao(@RequestBody Questao questao, @PathVariable("id") Long id) {
         return new ResponseEntity<>(questaoService.updateQuestao(questao, id), HttpStatus.OK);
     }
 

@@ -10,7 +10,7 @@ CREATE TABLE questoes (
 	questionario_id int8 NULL,
 	CONSTRAINT questoes_pkey PRIMARY KEY (id),
 	CONSTRAINT questoes_pontuacao_check CHECK ((pontuacao >= 0)),
-	CONSTRAINT fk2byaekmoemg34p8hu9gvwfdw4 FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT questoes_references_questionarios FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE respostas (
 	id int8 NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE respostas (
 	resposta varchar(255) NOT NULL,
 	questao_id int8 NULL,
 	CONSTRAINT respostas_pkey PRIMARY KEY (id),
-	CONSTRAINT fk6sapsmqsahkclvxenv57owrsk FOREIGN KEY (questao_id) REFERENCES questoes(id) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT respostas_references_questoes FOREIGN KEY (questao_id) REFERENCES questoes(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE usuarios (
 	user_type varchar(31) NOT NULL,
@@ -34,8 +34,8 @@ CREATE TABLE jogos (
 	jogador_id int8 NOT NULL,
 	questionario_id int8 NOT NULL,
 	CONSTRAINT jogos_pkey PRIMARY KEY (id),
-	CONSTRAINT fkdjmtuq900fl0ldhxwjks0kdpa FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fkroy863srmd9xv7tlqr8hmv2ok FOREIGN KEY (jogador_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT jogos_references_questionarios FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT jogos_references_usuarios FOREIGN KEY (jogador_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- Inserindo na tabela 'usuarios'
 INSERT INTO usuarios (id, user_type, nome, email, pontuacao)

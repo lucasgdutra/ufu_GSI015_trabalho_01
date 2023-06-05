@@ -1,6 +1,6 @@
 package br.ufu.gsi015.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "respostas")
@@ -21,16 +22,16 @@ public class Resposta {
 
     @ManyToOne
     @JoinColumn(name = "questao_id")
-    @JsonIgnore
+    @NotNull(message = "pergunta precisa ter uma questao associada")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Questao questao;
 
     @NotBlank(message = "resposta nao pode ser nulo")
     @Column(nullable = false)
     private String resposta;
 
-    @NotBlank(message = "correta nao pode ser nulo")
+    @NotNull(message = "correta nao pode ser nulo")
     @Column(nullable = false)
-
     private Boolean correta;
 
     protected Resposta() {

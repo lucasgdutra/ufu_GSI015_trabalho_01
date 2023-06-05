@@ -69,6 +69,12 @@ public class QuestaoService {
             if (questao.getPontuacao() != null) {
                 questaoAtual.setPontuacao(questao.getPontuacao());
             }
+            if (questao.getQuestionario() != null) {
+                questaoAtual.setQuestionario(questao.getQuestionario());
+            }
+            if (questao.getRespostas() != null) {
+                questaoAtual.setRespostas(questao.getRespostas());
+            }
 
             return questaoRepository.save(questaoAtual);
         } catch (Exception e) {

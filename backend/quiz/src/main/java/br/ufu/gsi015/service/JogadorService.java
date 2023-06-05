@@ -44,7 +44,7 @@ public class JogadorService {
 
     public Jogador createJogador(Jogador newEntity) {
         try {
-            Optional<Jogador> jogador = jogadorRepository.findById(newEntity.getId());
+            Optional<Jogador> jogador = jogadorRepository.findByName(newEntity.getName());
             if (jogador.isPresent()) {
                 throw new CustomConflictException("User already exists");
             }

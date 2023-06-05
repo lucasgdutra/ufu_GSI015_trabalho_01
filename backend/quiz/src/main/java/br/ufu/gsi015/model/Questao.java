@@ -3,7 +3,7 @@ package br.ufu.gsi015.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "questoes")
@@ -27,16 +28,17 @@ public class Questao {
     @NotBlank(message = "A pergunta não pode ser vazio")
     private String pergunta;
 
-    @NotBlank(message = "A pontuacao não pode ser vazio")
     @Min(value = 0, message = "Pontuacao deve ser maior ou igual a zero")
     private Integer pontuacao;
 
     @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Resposta> respostas;
 
     @ManyToOne
     @JoinColumn(name = "questionario_id")
-    @JsonIgnore
+    @NotNull(message = "A questão deve pertencer a um questionário")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Questionario questionario;
 
     protected Questao() {
@@ -78,6 +80,10 @@ public class Questao {
 
     public List<Resposta> getRespostas() {
         return respostas;
+    }
+
+    public void setRespostas(List<Resposta> respostas) {
+        this.respostas = respostas;
     }
 
     public void addResposta(Resposta resposta) {
