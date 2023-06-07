@@ -33,7 +33,8 @@
 				"GitHub.copilot",
 				"mtxr.sqltools",
 				"mtxr.sqltools-driver-pg",
-				"esbenp.prettier-vscode"
+				"esbenp.prettier-vscode",
+				"bradlc.vscode-tailwindcss"
 			]
 		}
 	},
