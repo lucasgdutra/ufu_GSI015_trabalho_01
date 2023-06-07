@@ -1,5 +1,5 @@
 import { UseQueryOptions, UseQueryResult, useQuery, useMutation, useQueryClient, MutationFunction, UseMutationOptions } from '@tanstack/react-query';
-import axios, { AxiosResponse, Method } from 'axios'
+import axios, { AxiosError, AxiosResponse, Method } from 'axios'
 
 // type pathWithId = (id: number) => string;
 // type pathWithoutId = () => string;
@@ -201,16 +201,16 @@ const endpoints: Endpoints = {
     },
 }
 
-interface useQuizQueryProps {
+interface useQuizQueryProps<T> {
     endpoint: EndpointParams;
     id?: number;
     name?: string;
     body?: any;
-    useQueryOptions?: UseQueryOptions;
+    useQueryOptions?: UseQueryOptions<T, AxiosError<ErrorDetails>>;
 }
-function useQuizQuery<T>({ endpoint, id, name, body, useQueryOptions }: useQuizQueryProps): UseQueryResult<T> {
-    return useQuery<T>({
-        queryKey: [endpoint.path(id)],
+function useQuizQuery<T>({ endpoint, id, name, body, useQueryOptions }: useQuizQueryProps<T>): UseQueryResult<T, AxiosError<ErrorDetails>> {
+    return useQuery<T, AxiosError<ErrorDetails>>({
+        queryKey: [endpoint.path(id, name)],
         queryFn: () => axios({
             url: endpoint.path(id, name) as string,
             method: endpoint.method,
@@ -226,10 +226,10 @@ interface useQuizMutationProps<T, V = undefined> {
     endpoint: EndpointParams;
     id?: number;
     body?: any;
-    options?: UseMutationOptions<AxiosResponse<T>, unknown, V>;
+    options?: UseMutationOptions<AxiosResponse<T>, AxiosError<ErrorDetails>, V>;
 }
 function useQuizMutation<T, V = undefined>({ endpoint, id, body, options }: useQuizMutationProps<T, V>) {
-    return useMutation<AxiosResponse<T>, unknown, V>(
+    return useMutation<AxiosResponse<T>, AxiosError<ErrorDetails>, V>(
         (variables?: V) =>
             axios({
                 url: endpoint.path(id),

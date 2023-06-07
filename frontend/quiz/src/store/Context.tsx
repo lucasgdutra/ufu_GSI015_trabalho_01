@@ -9,7 +9,7 @@ import typedLocalStorage from './typedLocalStorage';
 import { endpoints } from '../config/api';
 import axios from 'axios';
 import { isEqual } from 'lodash';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type InitialStateType = {
 	jogador: Jogador | null;
@@ -115,8 +115,12 @@ const AppProvider = ({ children }: AppProviderProps) => {
 	};
 
 	const useSyncJogador = () => {
+		const queryClient = useQueryClient();
 		const { mutate: syncJogador } = useMutation(syncJogadorMutation, {
 			onError: (error) => console.log(error),
+			onSuccess: () => {
+				queryClient.invalidateQueries([endpoints.getJogadoresRanking]);
+			},
 		});
 		return syncJogador;
 	};
