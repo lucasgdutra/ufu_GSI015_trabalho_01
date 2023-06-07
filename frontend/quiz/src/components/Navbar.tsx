@@ -4,13 +4,13 @@ import { AppContext, ActionTypes } from '../store/Context';
 
 const Navbar = () => {
 	const {
-		state: { username },
+		state: { jogador },
 		dispatch,
 	} = useContext(AppContext);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const handleLogout = () => {
-		dispatch({ type: ActionTypes.SET_USERNAME, payload: null });
+		dispatch({ type: ActionTypes.SET_JOGADOR, payload: null });
 		navigate('/');
 	};
 
@@ -93,7 +93,9 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div className="flex items-end">
-						{username === null ? (
+						{jogador === undefined ||
+						jogador === null ||
+						jogador.name === '' ? (
 							<Link to="/login">Fazer Login</Link>
 						) : (
 							<>
@@ -104,7 +106,7 @@ const Navbar = () => {
 											setIsDropdownOpen(!isDropdownOpen)
 										}
 									>
-										{username}
+										{jogador.name}
 									</button>
 									{isDropdownOpen && (
 										<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">

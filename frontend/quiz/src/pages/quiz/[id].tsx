@@ -2,9 +2,10 @@
 
 import React, { FC, useContext, useEffect, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { PageProps, navigate } from 'gatsby';
-import { AppContext } from '../../store/Context';
+import { ActionTypes, AppContext } from '../../store/Context';
+import endpoints, { useQuizQuery } from '../../config/api';
+import axios from 'axios';
 
 interface QuestionCardProps {
 	question: Questao;
@@ -60,7 +61,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 					/>
 					<label
 						htmlFor={`answer-${answer.id}`}
-						className="text-gray-700"
+						className={` ${
+							isAnswerChecked && answer.correta
+								? 'text-green-500'
+								: isAnswerChecked && !answer.correta
+								? 'text-red-500'
+								: 'text-gray-700'
+						}`}
 					>
 						{answer.resposta}
 					</label>
@@ -75,12 +82,12 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 			</button>
 			{alertMessage && (
 				<div
-					className={`alert mt-4 px-6 py-3 rounded shadow ${
+					className={`alert mt-4 px-6 py-3 rounded shadow font-bold ${
 						alertMessage === 'Resposta correta'
-							? 'bg-green-500'
+							? 'text-green-500'
 							: alertMessage === 'Verificando resposta...'
-							? 'bg-blue-500'
-							: 'bg-red-500'
+							? 'text-blue-500'
+							: 'text-red-500'
 					}`}
 				>
 					{alertMessage}
@@ -92,24 +99,31 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
 const QuizPage: FC<PageProps> = ({ params }) => {
 	const {
-		state: { username },
+		state: { jogador, jogo },
+		dispatch,
 	} = useContext(AppContext);
 	useEffect(() => {
-		if (username === '' || username === null) {
+		if (jogador === undefined || jogador === null || jogador.name === '') {
 			navigate('/login');
 		}
-	}, [username]);
+	}, [jogador]);
 
 	const { id } = params;
-	const { data, isLoading, isError } = useQuery<Questao[]>({
-		queryKey: ['questoes'],
-		queryFn: () =>
-			fetch(`/api/questionarios/${id}/questoes`).then((res) =>
-				res.json(),
-			),
-		enabled: username !== undefined && username !== '' && username !== null,
+
+	const { data, isLoading, error } = useQuizQuery<Questao[]>({
+		endpoint: endpoints.getQuestoesByQuestionarioId,
+		id: Number(id),
+		useQueryOptions: {
+			enabled:
+				jogador !== undefined &&
+				jogador !== null &&
+				jogador.name !== '',
+		},
 	});
+
 	const [totalPoints, setTotalPoints] = useState<number>(0);
+
+	useEffect(() => {}, [totalPoints]);
 
 	const handleGoBack = () => {
 		navigate('/jogar');
@@ -117,10 +131,26 @@ const QuizPage: FC<PageProps> = ({ params }) => {
 
 	const handleCorrectAnswer = (points: number) => {
 		setTotalPoints(totalPoints + points);
+		if (jogo !== undefined && jogo !== null) {
+			dispatch({
+				type: ActionTypes.SET_JOGO,
+				payload: { ...jogo, pontuacao: (jogo.pontuacao || 0) + points },
+			});
+		}
+		if (jogador !== undefined && jogador !== null) {
+			dispatch({
+				type: ActionTypes.SET_JOGADOR,
+				payload: {
+					...jogador,
+					pontuacao: (jogador.pontuacao || 0) + points,
+				},
+			});
+		}
 	};
 
 	if (isLoading) return <p>Carregando...</p>;
-	if (isError) return <p>Erro</p>;
+	if (error) return <p>Erro {error as string}</p>;
+	if (data === undefined) return <div>Nenhum questionário disponivel</div>;
 
 	return (
 		<div className="p-4 space-y-2">

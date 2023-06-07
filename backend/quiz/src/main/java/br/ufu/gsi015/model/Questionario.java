@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "questionarios")
 public class Questionario {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "questionarios_seq")
+    @SequenceGenerator(name = "questionarios_seq", sequenceName = "questionarios_seq", allocationSize = 1)
     private Long id;
 
     @NotBlank(message = "O título não pode ser vazio")

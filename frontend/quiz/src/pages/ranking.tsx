@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { HeadFC, PageProps } from 'gatsby';
 
 import Navbar from '../components/Navbar';
+import endpoints, { useQuizQuery } from '../config/api';
 
 export const Head: HeadFC = () => <title>Quiz</title>;
 
 const Ranking: React.FC<PageProps> = () => {
-	const { data, isLoading, isError } = useQuery<Jogador[]>({
-		queryKey: ['players_ranking'],
-		queryFn: () => fetch('/api/players/ranking').then((res) => res.json()),
+	const { data, isLoading, isError } = useQuizQuery<Jogador[]>({
+		endpoint: endpoints.getJogadoresRanking,
 	});
 
 	if (isLoading) return <p>Carregando...</p>;

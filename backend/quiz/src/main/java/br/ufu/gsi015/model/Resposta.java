@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "respostas")
 public class Resposta {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "respostas_seq")
+    @SequenceGenerator(name = "respostas_seq", sequenceName = "respostas_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne

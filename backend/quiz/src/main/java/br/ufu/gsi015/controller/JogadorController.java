@@ -35,6 +35,11 @@ public class JogadorController {
         return new ResponseEntity<>(jogadorService.getJogadorById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Jogador> onePlayerByName(@PathVariable String name) {
+        return new ResponseEntity<>(jogadorService.getJogadorByName(name), HttpStatus.OK);
+    }
+
     @GetMapping("/ranking")
     public ResponseEntity<Iterable<Jogador>> ranking() {
         return new ResponseEntity<>(jogadorService.getRanking(), HttpStatus.OK);

@@ -1,13 +1,21 @@
 package br.ufu.gsi015.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "jogos")
 public class Jogo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogos_seq")
+    @SequenceGenerator(name = "jogos_seq", sequenceName = "jogos_seq", allocationSize = 1)
     private Long id;
 
     @NotNull(message = "jogador não pode ser vazio")

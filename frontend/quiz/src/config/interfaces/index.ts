@@ -17,12 +17,7 @@ interface Questionario {
   questoes: Questao[];
 }
 
-interface Jogador {
-  id?: number;
-  name: string;
-  email: string;
-  pontuacao?: number;
-}
+
 
 interface Jogo {
   id?: number;
@@ -31,14 +26,15 @@ interface Jogo {
   pontuacao?: number;
 }
 
-interface Administrador {
-  id?: number;
-  name: string;
-  email: string;
-}
-
 interface Usuario {
   id?: number;
   name: string;
-  email: string;
+  email?: string;
+}
+
+interface Administrador extends Usuario {
+}
+
+interface Jogador extends Usuario {
+  pontuacao?: number;
 }

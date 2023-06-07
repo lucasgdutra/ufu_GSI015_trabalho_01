@@ -1,93 +1,88 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { startTransition, useState } from 'react';
 
-const deleteAnswer = async (id: Resposta['id']) => {
-	const res = await axios.delete(`/api/respostas/${id}`);
-	if (res.status !== 200) {
-		throw new Error('Erro ao deletar resposta');
-	}
-};
+import { endpoints, useQuizMutation } from '../../../config/api';
 
 interface AnswerListProps {
 	answer: Resposta;
 }
 const AnswerList = ({ answer }: AnswerListProps) => {
-	const { data, isLoading, error } = useQuery<Resposta['correta']>({
-		queryKey: [`resposta_${answer.id}_correta`],
-		queryFn: () =>
-			axios
-				.get(`/api/respostas/${answer.id}/correta`)
-				.then((res) => res.data),
-	});
-	const [alertMessage, setAlertMessage] = useState<string>('');
+	const [showAlert, setShowAlert] = React.useState<boolean>(true);
 	const queryClient = useQueryClient();
-	const mutation = useMutation(deleteAnswer, {
-		onSuccess: () => {
-			queryClient.invalidateQueries([
-				'questionarios',
-				'questoes',
-				'respostas',
-			]);
-			startTransition(() => {
-				setAlertMessage('Resposta deletada com sucesso');
-				setTimeout(() => {
-					setAlertMessage('');
-				}, 5000);
-			});
+	const {
+		mutate,
+		isLoading: isDeleting,
+		isSuccess: isDeleted,
+		isError: hasError,
+	} = useQuizMutation<Resposta>({
+		endpoint: endpoints['deleteResposta'],
+		id: answer.id,
+		options: {
+			onMutate: () => {},
+			onSuccess: () => {
+				queryClient.invalidateQueries({
+					queryKey: ['questoes'],
+				});
+			},
 		},
 	});
 
 	const handleDeleteAnswer = (id: Resposta['id']) => {
-		startTransition(() => {
-			setAlertMessage('Deletando resposta de ID: ' + id + '...');
-			mutation.mutate(id);
-		});
+		mutate(undefined);
 	};
+	if ((isDeleted || isDeleting || hasError) && showAlert) {
+		return (
+			<div
+				className={`alert mb-2 p-2 rounded shadow ${
+					hasError
+						? 'bg-red-500'
+						: isDeleted
+						? 'bg-green-500'
+						: 'bg-blue-500'
+				}`}
+			>
+				<button
+					className="float-right"
+					onClick={() => setShowAlert(false)}
+				>
+					X
+				</button>
+				{hasError && `Erro ao deletar resposta "${answer.resposta}"`}
+				{isDeleting && `Deletando resposta "${answer.resposta}"...`}
+				{isDeleted && `Resposta "${answer.resposta}" deletada`}
+			</div>
+		);
+	}
+	if ((isDeleted || isDeleting || hasError) && !showAlert) {
+		return null;
+	}
 	return (
 		<div className="flex flex-col">
-			{alertMessage && (
-				<div
-					className={
-						'alert mt-4 px-6 py-3 rounded shadow bg-blue-500'
-					}
-				>
-					{alertMessage}
-				</div>
-			)}
-
 			<div className="flex justify-between items-center mb-2">
 				<label
 					className="block text-gray-700 text-sm font-bold mb-2"
 					htmlFor="answer-title"
 				>
-					Answer Title:
+					Resposta
 				</label>
 				<input
 					id="answer-title"
 					className="border p-2 rounded-md w-2/3"
 					type="text"
-					placeholder="Answer Title"
+					placeholder="Resposta"
 					defaultValue={answer.resposta}
 				/>
 				<div className="flex items-center">
-					{isLoading ? (
-						<div>Carregando...</div>
-					) : error ? (
-						<div>Erro ao carregar resposta correta</div>
-					) : (
-						<input
-							className="mr-2"
-							type="checkbox"
-							defaultChecked={data}
-						/>
-					)}
+					<input
+						className="mr-2"
+						type="checkbox"
+						defaultChecked={answer.correta}
+					/>
 					<button
 						className="bg-red-500 text-white p-2 rounded-md"
 						onClick={() => handleDeleteAnswer(answer.id)}
 					>
-						Delete
+						Deletar
 					</button>
 				</div>
 			</div>

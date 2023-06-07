@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +23,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "questoes")
 public class Questao {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "questoes_seq")
+    @SequenceGenerator(name = "questoes_seq", sequenceName = "questoes_seq", allocationSize = 1)
     private Long id;
 
     @NotBlank(message = "A pergunta não pode ser vazio")

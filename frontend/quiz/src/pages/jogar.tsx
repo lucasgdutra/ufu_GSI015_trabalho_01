@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { HeadFC, PageProps, navigate } from 'gatsby';
 
 import Navbar from '../components/Navbar';
 import { useContext, useEffect } from 'react';
-import { AppContext } from '../store/Context';
+import { ActionTypes, AppContext } from '../store/Context';
+import { useQuizQuery, endpoints } from '../config/api';
 
 export const Head: HeadFC = () => <title>Quiz</title>;
 
@@ -22,8 +22,18 @@ const QuizCardWrapper = ({ children }: QuizCardWrapperProps) => {
 
 interface QuizCardProps {
 	questionario: Questionario;
+	jogador: Jogador;
 }
-const QuizCard = ({ questionario }: QuizCardProps) => {
+const QuizCard = ({ questionario, jogador }: QuizCardProps) => {
+	const { dispatch } = useContext(AppContext);
+	const handleStartQuiz = () => {
+		const jogo: Jogo = {
+			questionario: questionario,
+			jogador: jogador,
+		};
+		dispatch({ type: ActionTypes.SET_JOGO, payload: jogo });
+		navigate(`/quiz/${questionario.id}`);
+	};
 	return (
 		<div className="w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:w-full m-4">
 			<div className="md:flex items-center justify-center ">
@@ -35,7 +45,7 @@ const QuizCard = ({ questionario }: QuizCardProps) => {
 						<button
 							className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
 							type="button"
-							onClick={() => navigate(`/quiz/${questionario.id}`)}
+							onClick={handleStartQuiz}
 						>
 							Começar
 						</button>
@@ -48,22 +58,28 @@ const QuizCard = ({ questionario }: QuizCardProps) => {
 
 const Questionario: React.FC<PageProps> = () => {
 	const {
-		state: { username },
+		state: { jogador },
 	} = useContext(AppContext);
 
 	useEffect(() => {
-		if (username === '' || username === null) {
+		if (jogador === undefined || jogador === null || jogador.name === '') {
 			navigate('/login');
 		}
-	}, [username]);
+	}, [jogador]);
 
-	const { data, isLoading, isError } = useQuery<Questionario[]>({
-		queryKey: ['questionarios'],
-		queryFn: () => fetch('/api/questionarios').then((res) => res.json()),
-		enabled: username !== undefined && username !== '' && username !== null,
+	const { data, isLoading, isError } = useQuizQuery<Questionario[]>({
+		endpoint: endpoints.getQuestionarios,
+		useQueryOptions: {
+			enabled:
+				jogador !== undefined &&
+				jogador !== null &&
+				jogador.name !== '',
+		},
 	});
-
-	if (isLoading || username === undefined) return <p>Carregando...</p>;
+	if (jogador === undefined || jogador === null || jogador.name === '') {
+		return null;
+	}
+	if (isLoading || jogador === undefined) return <p>Carregando...</p>;
 	if (isError) return <p>Erro</p>;
 	return (
 		<>
@@ -73,6 +89,7 @@ const Questionario: React.FC<PageProps> = () => {
 					<QuizCard
 						key={questionario.id}
 						questionario={questionario}
+						jogador={jogador}
 					/>
 				))}
 			</QuizCardWrapper>

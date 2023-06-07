@@ -48,6 +48,9 @@ public class JogadorService {
             if (jogador.isPresent()) {
                 throw new CustomConflictException("User already exists");
             }
+            if (newEntity.getPontuacao() == null) {
+                newEntity.setPontuacao(0L);
+            }
             return jogadorRepository.save(newEntity);
         } catch (Exception e) {
             throw new CustomInternalErrorException(e.getMessage());
@@ -86,6 +89,18 @@ public class JogadorService {
     public Iterable<Jogador> getRanking() {
         try {
             return jogadorRepository.findTop25ByOrderByPontuacaoDesc();
+        } catch (Exception e) {
+            throw new CustomInternalErrorException(e.getMessage());
+        }
+    }
+
+    public Jogador getJogadorByName(String name) {
+        try {
+            Optional<Jogador> jogador = jogadorRepository.findByName(name);
+            if (jogador.isPresent()) {
+                return jogador.get();
+            }
+            throw new CustomNotFoundException("User not found");
         } catch (Exception e) {
             throw new CustomInternalErrorException(e.getMessage());
         }

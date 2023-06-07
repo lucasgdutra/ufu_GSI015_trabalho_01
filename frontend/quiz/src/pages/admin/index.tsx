@@ -5,11 +5,12 @@ import React, {
 	startTransition,
 	useEffect,
 } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Navbar } from '../../components/Navbar';
 import { navigate } from 'gatsby';
 import { AppContext } from '../../store/Context';
+import endpoints, { useQuizQuery } from '../../config/api';
 
 const fetchQuizzes = async () => {
 	const res = await axios.get('/api/questionarios');
@@ -25,20 +26,25 @@ const deleteQuiz = async (id: Questionario['id']) => {
 
 const AdminPage: FC = () => {
 	const {
-		state: { username },
+		state: { jogador },
 	} = useContext(AppContext);
 	useEffect(() => {
-		if (username === '' || username === null) {
+		if (jogador === undefined || jogador === null || jogador.name === '') {
 			navigate('/login');
 		}
-	}, [username]);
+	}, [jogador]);
 
 	const queryClient = useQueryClient();
-	const { data, isLoading, error } = useQuery<Questionario[]>({
-		queryKey: ['quizzes'],
-		queryFn: fetchQuizzes,
-		enabled: username !== undefined && username !== '' && username !== null,
+	const { data, isLoading, error } = useQuizQuery<Questionario[]>({
+		endpoint: endpoints.getQuestionarios,
+		useQueryOptions: {
+			enabled:
+				jogador !== undefined &&
+				jogador !== null &&
+				jogador.name !== '',
+		},
 	});
+
 	const [alertMessage, setAlertMessage] = useState<string>('');
 
 	const mutation = useMutation(deleteQuiz, {

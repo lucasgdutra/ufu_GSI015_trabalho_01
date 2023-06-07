@@ -6,19 +6,21 @@ import { Navbar } from '../components/Navbar';
 
 const Login = () => {
 	const {
-		state: { username },
+		state: { jogador },
 		dispatch,
 	} = useContext(AppContext);
-	const [tempUsername, setTempUsername] = React.useState(username);
+	const [tempUsername, setTempUsername] = React.useState(jogador);
 	const [alertMessage, setAlertMessage] = React.useState('');
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setTempUsername(event.target.value);
+		setTempUsername({
+			name: event.target.value,
+		});
 	};
 	const handleSave = () => {
-		if (tempUsername === '' || tempUsername === null) {
+		if (tempUsername === null || tempUsername?.name === '') {
 			setAlertMessage('Nome de usuário não pode ser vazio');
 		} else {
-			dispatch({ type: ActionTypes.SET_USERNAME, payload: tempUsername });
+			dispatch({ type: ActionTypes.SET_JOGADOR, payload: tempUsername });
 			navigate(`/jogar`);
 		}
 	};
@@ -35,7 +37,7 @@ const Login = () => {
 				</label>
 				<input
 					type="text"
-					value={tempUsername || ''}
+					value={tempUsername?.name || ''}
 					onChange={handleChange}
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					id="username"

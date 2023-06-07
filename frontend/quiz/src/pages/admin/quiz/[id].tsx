@@ -1,42 +1,51 @@
 import React, { FC, useContext, useEffect } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { PageProps, navigate } from 'gatsby';
 import { AppContext } from '../../../store/Context';
 import { QuestionCard } from '../../../components/admin/quizEdit/QuestionCard';
 
 import axios from 'axios';
+import endpoints, { useQuizQuery } from '../../../config/api';
 
 const QuizEdit: FC<PageProps> = ({ params }) => {
 	const {
-		state: { username },
+		state: { jogador },
 	} = useContext(AppContext);
 
 	useEffect(() => {
-		if (username === '' || username === null) {
+		if (jogador === undefined || jogador === null || jogador.name === '') {
 			navigate('/login');
 		}
-	}, [username]);
+	}, [jogador]);
 
 	const { id } = params;
-	const { data, isLoading, error } = useQuery<Questionario>({
-		queryKey: [`/api/questionarios/${id}`],
-		queryFn: () =>
-			axios.get(`/api/questionarios/${id}`).then((res) => res.data),
-		enabled: username !== undefined && username !== '' && username !== null,
+
+	const { data, isLoading, error } = useQuizQuery<Questionario>({
+		endpoint: endpoints.getQuestionarioById,
+		id: Number(id),
+		useQueryOptions: {
+			enabled:
+				jogador !== undefined &&
+				jogador !== null &&
+				jogador.name !== '',
+		},
 	});
+
 	const {
 		data: questoesData,
 		isLoading: questoesIsLoading,
 		error: questoesError,
-	} = useQuery<Questao[]>({
-		queryKey: [`/api/questionarios/${id}/questoes`],
-		queryFn: () =>
-			axios
-				.get(`/api/questionarios/${id}/questoes`)
-				.then((res) => res.data),
-		enabled: username !== undefined && username !== '' && username !== null,
+	} = useQuizQuery<Questao[]>({
+		endpoint: endpoints.getQuestoesByQuestionarioId,
+		id: Number(id),
+		useQueryOptions: {
+			enabled:
+				jogador !== undefined &&
+				jogador !== null &&
+				jogador.name !== '',
+		},
 	});
+
 	return (
 		<div className="antialiased sans-serif p-4 space-y-2 flex flex-col">
 			<button

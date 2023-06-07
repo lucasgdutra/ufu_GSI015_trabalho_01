@@ -29976,3 +29976,49 @@ VALUES (1, 100, 2, 1),
 	(2, 200, 2, 2),
 	(3, 50, 3, 3),
 	(4, 150, 4, 4);
+
+
+CREATE SEQUENCE jogos_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+select setval('jogos_seq', (select max(id) from jogos));
+
+CREATE SEQUENCE questionarios_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+select setval('questionarios_seq', (select max(id) from questionarios));
+
+CREATE SEQUENCE questoes_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+select setval('questoes_seq', (select max(id) from questoes));
+
+CREATE SEQUENCE respostas_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+select setval('respostas_seq', (select max(id) from respostas));
+
+CREATE SEQUENCE usuarios_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+select setval('usuarios_seq', (select max(id) from usuarios ));

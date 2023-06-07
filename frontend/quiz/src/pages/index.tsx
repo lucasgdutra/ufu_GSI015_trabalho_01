@@ -4,11 +4,15 @@ import { AppContext } from '../store/Context';
 
 const LandingPage = () => {
 	const {
-		state: { username },
+		state: { jogador: username },
 	} = useContext(AppContext);
 
 	const handleClick = () => {
-		if (username === '' || username === null) {
+		if (
+			username === undefined ||
+			username === null ||
+			username.name === ''
+		) {
 			navigate(`/login`);
 		} else {
 			navigate(`/jogar`);
